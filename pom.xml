@@ -67,5 +67,11 @@
     </plugins>
   </build>
 
-  <modules></modules>
+  <modules>
+    <module>address-service</module>
+    <module>api-gateway</module>
+    <module>catalog-service</module>
+    <module>customer-service</module>
+    <module>eureka-server</module>
+  </modules>
 </project>
