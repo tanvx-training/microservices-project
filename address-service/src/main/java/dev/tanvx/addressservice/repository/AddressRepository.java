@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Integer> {
 
-    @Query("SELECT a FROM Address a JOIN a.city c WHERE c.country.countryId = :countryId")
+    @Query("SELECT a FROM Address a JOIN FETCH a.city c WHERE c.country.countryId = :countryId")
     Page<Address> findByCountryId(Integer countryId, Pageable pageable);
 }
