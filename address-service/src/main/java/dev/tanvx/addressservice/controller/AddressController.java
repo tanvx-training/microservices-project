@@ -24,7 +24,12 @@ public class AddressController {
             @RequestParam(value = "sort", defaultValue = "addressId,asc") String sort) {
 
         return ResponseEntity.ok(addressUseCase.getAddressByCountry(
-                AddressByCountryRequestDTO.builder().build()
+                AddressByCountryRequestDTO.builder()
+                        .countryId(countryId)
+                        .page(page)
+                        .size(size)
+                        .sort(sort)
+                        .build()
         ));
     }
 }

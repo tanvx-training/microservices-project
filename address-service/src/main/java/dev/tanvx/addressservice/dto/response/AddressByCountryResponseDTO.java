@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AddressByCountryResponseDTO {
     private Integer addressId;
@@ -19,6 +21,7 @@ public class AddressByCountryResponseDTO {
 
     @Getter
     @Builder
+    @ToString
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class CityDTO {
         private Integer cityId;

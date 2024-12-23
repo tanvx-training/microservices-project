@@ -5,5 +5,5 @@ import dev.tanvx.addressservice.exception.ServiceException;
 
 public interface CountryService {
 
-    Country getCountryById(Integer id) throws ServiceException;
+    void checkCountryById(Integer id) throws ServiceException;
 }
