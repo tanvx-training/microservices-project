@@ -27,6 +27,6 @@ public class Country {
     @Column(name = "last_update", nullable = false)
     private OffsetDateTime lastUpdate;
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<City> cities;
 }

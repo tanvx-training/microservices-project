@@ -12,4 +12,7 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 
     @Query("SELECT a FROM Address a JOIN FETCH a.city c WHERE c.country.countryId = :countryId")
     Page<Address> findByCountryId(Integer countryId, Pageable pageable);
+
+    @Query("SELECT a FROM Address a JOIN FETCH a.city c WHERE c.cityId = :cityId")
+    Page<Address> findByCityId(Integer cityId, Pageable pageable);
 }

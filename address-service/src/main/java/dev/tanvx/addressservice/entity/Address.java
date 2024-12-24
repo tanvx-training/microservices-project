@@ -27,7 +27,7 @@ public class Address {
     @Column(name = "district", nullable = false)
     private String district;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id", nullable = false, referencedColumnName = "city_id",
             foreignKey = @ForeignKey(name = "fk_address_city"))
     private City city;

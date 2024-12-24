@@ -9,8 +9,8 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class AddressByCountryRequestDTO {
-    private final Integer countryId;
+public class AddressByCityRequestDTO {
+    private final Integer cityId;
     @Min(value = 0, message = "Page number must be greater than zero.")
     private final Integer page;
     @Min(value = 1, message = "Size number must be greater than one.")

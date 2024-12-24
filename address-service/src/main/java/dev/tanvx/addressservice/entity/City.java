@@ -23,7 +23,7 @@ public class City {
     @Column(name = "city", nullable = false)
     private String city;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "country_id", nullable = false, referencedColumnName = "country_id",
             foreignKey = @ForeignKey(name = "fk_city_country"))
     private Country country;
@@ -31,6 +31,6 @@ public class City {
     @Column(name = "last_update", nullable = false)
     private OffsetDateTime lastUpdate;
 
-    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> addresses;
 }

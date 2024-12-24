@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CountryServiceImpl implements CountryService {
 
-    public static final String COUNTRY_NOT_FOUND = "COUNTRY_NOT_FOUND";
-
     private final CountryRepository countryRepository;
 
     @Override
