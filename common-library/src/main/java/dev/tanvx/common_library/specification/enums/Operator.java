@@ -10,9 +10,10 @@ import java.util.*;
 public enum Operator {
 
   EQUAL {
+    @Override
     public <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate) {
+      Path<?> key = getKeyPath(root, request.getKey());
       Object value = request.getFieldType().parse(request.getValue().toString());
-      Expression<?> key = root.get(request.getKey());
       return cb.and(cb.equal(key, value), predicate);
     }
   },
@@ -68,4 +69,12 @@ public enum Operator {
 
   public abstract <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate);
 
+  private static <T> Path<?> getKeyPath(Root<T> root, String key) {
+    String[] pathParts = key.split("\\.");
+    Path<?> path = root;
+    for (String part : pathParts) {
+      path = path.get(part);
+    }
+    return path;
+  }
 }
