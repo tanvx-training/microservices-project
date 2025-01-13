@@ -19,6 +19,11 @@ spring:
     show-sql: true
     open-in-view: false
 
+#logging:
+#  structured:
+#    format:
+#      console: logstash
+
 management:
   endpoints:
     web:

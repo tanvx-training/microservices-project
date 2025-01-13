@@ -11,18 +11,18 @@ import dev.tanvx.common_library.util.ValidationUtils;
 import dev.tanvx.movies_service.dto.request.AddressByCityRequestDTO;
 import dev.tanvx.movies_service.dto.request.AddressByCountryRequestDTO;
 import dev.tanvx.movies_service.dto.request.AddressByIdRequestDTO;
+import dev.tanvx.movies_service.dto.request.AddressesRequestDTO;
 import dev.tanvx.movies_service.dto.response.AddressByCityResponseDTO;
 import dev.tanvx.movies_service.dto.response.AddressByCountryResponseDTO;
 import dev.tanvx.movies_service.dto.response.AddressByIdResponseDTO;
+import dev.tanvx.movies_service.dto.response.AddressesResponseDTO;
+import dev.tanvx.movies_service.entity.Address;
 import dev.tanvx.movies_service.service.AddressService;
 import dev.tanvx.movies_service.service.CityService;
 import dev.tanvx.movies_service.service.CountryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -49,10 +49,7 @@ public class AddressUseCase {
       validationUtils.validateRequest(requestDTO);
 
       // Validate sort parameter
-      String[] parts = requestDTO.getSort().split(",");
-      if (parts.length < 1 || parts.length > 2) {
-        throw new IllegalArgumentException();
-      }
+      validationUtils.validateSortParam(requestDTO.getSort(), Address.class);
 
       // Validate country ID
       countryService.checkCountryById(requestDTO.getCountryId());
@@ -85,10 +82,7 @@ public class AddressUseCase {
       validationUtils.validateRequest(requestDTO);
 
       // Validate sort parameter
-      String[] parts = requestDTO.getSort().split(",");
-      if (parts.length < 1 || parts.length > 2) {
-        throw new IllegalArgumentException();
-      }
+      validationUtils.validateSortParam(requestDTO.getSort(), Address.class);
 
       // Validate city ID
       cityService.checkCityById(requestDTO.getCityId());
@@ -132,6 +126,30 @@ public class AddressUseCase {
         throw new BusinessException(HttpStatus.NOT_FOUND,
             messageUtils.getMessage(e.getCauseId(), null));
       }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
+  }
+
+  public ApiResponse<Page<AddressesResponseDTO>> getAddresses(AddressesRequestDTO requestDTO) {
+
+    try {
+      // Validate page and size parameter
+      validationUtils.validateRequest(requestDTO);
+
+      // Validate sort parameter
+      validationUtils.validateSortParam(requestDTO.getSort(), Address.class);
+
+      Page<AddressesResponseDTO> addressesResponseDTOPage = addressService.getAddresses(requestDTO);
+
+      return ApiResponse.<Page<AddressesResponseDTO>>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(addressesResponseDTOPage)
+          .build();
+    } catch (IllegalArgumentException e) {
+      throw new ValidationException(List.of(SORT_VALIDATION_ERROR));
+    } catch (Exception e) {
       throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
           messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
     }

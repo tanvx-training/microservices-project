@@ -6,12 +6,15 @@ import dev.tanvx.common_library.specification.enums.FieldType;
 import dev.tanvx.common_library.specification.enums.Operator;
 import dev.tanvx.common_library.specification.request.FilterRequest;
 import dev.tanvx.common_library.specification.request.SearchRequest;
+import dev.tanvx.common_library.util.SortRequestUtils;
 import dev.tanvx.movies_service.dto.request.AddressByCityRequestDTO;
 import dev.tanvx.movies_service.dto.request.AddressByCountryRequestDTO;
 import dev.tanvx.movies_service.dto.request.AddressByIdRequestDTO;
+import dev.tanvx.movies_service.dto.request.AddressesRequestDTO;
 import dev.tanvx.movies_service.dto.response.AddressByCityResponseDTO;
 import dev.tanvx.movies_service.dto.response.AddressByCountryResponseDTO;
 import dev.tanvx.movies_service.dto.response.AddressByIdResponseDTO;
+import dev.tanvx.movies_service.dto.response.AddressesResponseDTO;
 import dev.tanvx.movies_service.entity.Address;
 import dev.tanvx.movies_service.repository.AddressRepository;
 import dev.tanvx.movies_service.service.AddressService;
@@ -27,6 +30,8 @@ public class AddressServiceImpl implements AddressService {
 
   private final AddressRepository addressRepository;
 
+  private final SortRequestUtils sortRequestUtils;
+
   @Override
   public Page<AddressByCityResponseDTO> getByCity(AddressByCityRequestDTO requestDTO) {
 
@@ -40,6 +45,7 @@ public class AddressServiceImpl implements AddressService {
 
     SearchRequest searchRequest = SearchRequest.builder()
         .filters(List.of(filterRequest))
+        .sorts(sortRequestUtils.generateFromRequest(requestDTO.getSort()))
         .page(requestDTO.getPage())
         .size(requestDTO.getSize())
         .build();
@@ -96,6 +102,7 @@ public class AddressServiceImpl implements AddressService {
 
     SearchRequest searchRequest = SearchRequest.builder()
         .filters(List.of(filterRequest))
+        .sorts(sortRequestUtils.generateFromRequest(requestDTO.getSort()))
         .page(requestDTO.getPage())
         .size(requestDTO.getSize())
         .build();
@@ -115,6 +122,36 @@ public class AddressServiceImpl implements AddressService {
                 .cityName(address.getCity().getName())
                 .build())
             .country(AddressByCountryResponseDTO.CountryDTO.builder()
+                .countryId(address.getCity().getCountry().getCountryId())
+                .countryName(address.getCity().getCountry().getName())
+                .build())
+            .build());
+  }
+
+  @Override
+  public Page<AddressesResponseDTO> getAddresses(AddressesRequestDTO requestDTO) {
+
+    SearchRequest searchRequest = SearchRequest.builder()
+        .sorts(sortRequestUtils.generateFromRequest(requestDTO.getSort()))
+        .page(requestDTO.getPage())
+        .size(requestDTO.getSize())
+        .build();
+
+    SearchSpecification<Address> specification = new SearchSpecification<>(searchRequest);
+    Pageable pageable = SearchSpecification.getPageable(requestDTO.getPage(), requestDTO.getSize());
+    return addressRepository.findAll(specification, pageable)
+        .map(address -> AddressesResponseDTO.builder()
+            .addressId(address.getAddressId())
+            .address(address.getAddress())
+            .address2(address.getAddress2())
+            .district(address.getDistrict())
+            .postalCode(address.getPostalCode())
+            .phone(address.getPhone())
+            .city(AddressesResponseDTO.CityDTO.builder()
+                .cityId(address.getCity().getCityId())
+                .cityName(address.getCity().getName())
+                .build())
+            .country(AddressesResponseDTO.CountryDTO.builder()
                 .countryId(address.getCity().getCountry().getCountryId())
                 .countryName(address.getCity().getCountry().getName())
                 .build())

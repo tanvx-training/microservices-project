@@ -5,6 +5,11 @@ spring:
   application:
     name: eureka-server
 
+logging:
+  structured:
+    format:
+      console: logstash
+
 eureka:
   client:
     service-url:
