@@ -6,7 +6,7 @@ import dev.tanvx.common_library.specification.enums.FieldType;
 import dev.tanvx.common_library.specification.enums.Operator;
 import dev.tanvx.common_library.specification.request.FilterRequest;
 import dev.tanvx.common_library.specification.request.SearchRequest;
-import dev.tanvx.common_library.util.SortRequestUtils;
+import dev.tanvx.common_library.util.SearchSpecificationRequestUtils;
 import dev.tanvx.movies_service.dto.request.AddressByCityRequestDTO;
 import dev.tanvx.movies_service.dto.request.AddressByCountryRequestDTO;
 import dev.tanvx.movies_service.dto.request.AddressByIdRequestDTO;
@@ -30,7 +30,7 @@ public class AddressServiceImpl implements AddressService {
 
   private final AddressRepository addressRepository;
 
-  private final SortRequestUtils sortRequestUtils;
+  private final SearchSpecificationRequestUtils searchSpecificationRequestUtils;
 
   @Override
   public Page<AddressByCityResponseDTO> getByCity(AddressByCityRequestDTO requestDTO) {
@@ -45,7 +45,7 @@ public class AddressServiceImpl implements AddressService {
 
     SearchRequest searchRequest = SearchRequest.builder()
         .filters(List.of(filterRequest))
-        .sorts(sortRequestUtils.generateFromRequest(requestDTO.getSort()))
+        .sorts(searchSpecificationRequestUtils.buildSortRequestList(requestDTO.getSort()))
         .page(requestDTO.getPage())
         .size(requestDTO.getSize())
         .build();
@@ -102,7 +102,7 @@ public class AddressServiceImpl implements AddressService {
 
     SearchRequest searchRequest = SearchRequest.builder()
         .filters(List.of(filterRequest))
-        .sorts(sortRequestUtils.generateFromRequest(requestDTO.getSort()))
+        .sorts(searchSpecificationRequestUtils.buildSortRequestList(requestDTO.getSort()))
         .page(requestDTO.getPage())
         .size(requestDTO.getSize())
         .build();
@@ -132,7 +132,7 @@ public class AddressServiceImpl implements AddressService {
   public Page<AddressesResponseDTO> getAddresses(AddressesRequestDTO requestDTO) {
 
     SearchRequest searchRequest = SearchRequest.builder()
-        .sorts(sortRequestUtils.generateFromRequest(requestDTO.getSort()))
+        .sorts(searchSpecificationRequestUtils.buildSortRequestList(requestDTO.getSort()))
         .page(requestDTO.getPage())
         .size(requestDTO.getSize())
         .build();

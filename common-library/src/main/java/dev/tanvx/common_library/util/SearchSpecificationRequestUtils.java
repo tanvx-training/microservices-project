@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SortRequestUtils {
+public class SearchSpecificationRequestUtils {
 
-  public List<SortRequest> generateFromRequest(String sortParam) {
+  public List<SortRequest> buildSortRequestList(String sortParam) {
 
     List<SortRequest> sortRequestList = new ArrayList<>();
 

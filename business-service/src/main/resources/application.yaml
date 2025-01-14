@@ -24,13 +24,23 @@ management:
     web:
       exposure:
         include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
   endpoint:
     health:
-      show-details: always
-  prometheus:
-    metrics:
-      export:
+      probes:
         enabled: true
+    shutdown:
+      access: none
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 eureka:
   instance:
