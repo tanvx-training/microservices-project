@@ -1,17 +1,20 @@
 global:
-  scrape_interval:     5s # Set the scrape interval to every 5 seconds.
-  evaluation_interval: 5s # Evaluate rules every 5 seconds.
+  scrape_interval: 2s
+  evaluation_interval: 2s
 
 scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
   - job_name: 'movies-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'movies-service:8081' ]
-  - job_name: 'api-gateway'
+      - targets: ['movies-service:8081'] ## only for demo purposes don't use host.docker.internal in production
+  - job_name: 'business-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'api-gateway:8888' ]
-  - job_name: 'eureka-server'
+      - targets: ['business-service:8082'] ## only for demo purposes don't use host.docker.internal in production
+  - job_name: 'customer-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'eureka-server:8761' ]
+      - targets: ['customer-service:8083'] ## only for demo purposes don't use host.docker.internal in production

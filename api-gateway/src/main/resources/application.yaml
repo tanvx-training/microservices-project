@@ -14,7 +14,14 @@ spring:
           uri: lb://movies-service
           predicates:
             - Path=/api/v1/addresses/**
-            -
+        - id: customer-service
+          uri: lb://customer-service
+          predicates:
+            - Path=/api/v1/addresses/**
+        - id: business-service
+          uri: lb://business-service
+          predicates:
+            - Path=/api/v1/addresses/**
 management:
   endpoints:
     web:

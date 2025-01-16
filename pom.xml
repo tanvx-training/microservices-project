@@ -25,6 +25,16 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.github.loki4j</groupId>
+      <artifactId>loki-logback-appender</artifactId>
+      <version>1.3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
@@ -56,6 +66,7 @@
     <module>api-gateway</module>
     <module>business-service</module>
     <module>movies-service</module>
+    <module>customer-service</module>
     <module>common-library</module>
     <module>eureka-server</module>
   </modules>
