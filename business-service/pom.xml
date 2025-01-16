@@ -40,10 +40,6 @@
       <artifactId>spring-kafka</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-aop</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
@@ -53,7 +49,6 @@
       <artifactId>spring-kafka-test</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>dev.tanvx</groupId>
       <artifactId>common-library</artifactId>
