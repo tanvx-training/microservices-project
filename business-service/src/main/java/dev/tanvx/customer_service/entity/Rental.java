@@ -32,13 +32,11 @@ public class Rental {
   @Column(name = "rental_date", nullable = false)
   private ZonedDateTime rentalDate;
 
-  @ManyToOne
-  @JoinColumn(name = "inventory_id", nullable = false)
-  private Inventory inventory;
+  @Column(name = "inventory_id", nullable = false)
+  private Integer inventoryId;
 
-  @ManyToOne
-  @JoinColumn(name = "customer_id", nullable = false)
-  private Customer customer;
+  @Column(name = "customer_id", nullable = false)
+  private Integer customerId;
 
   @Column(name = "return_date")
   private ZonedDateTime returnDate;

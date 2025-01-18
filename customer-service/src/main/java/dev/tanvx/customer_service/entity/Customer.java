@@ -30,9 +30,8 @@ public class Customer {
   @Column(name = "customer_id")
   private Integer customerId;
 
-  @ManyToOne
-  @JoinColumn(name = "store_id", nullable = false)
-  private Store store;
+  @Column(name = "store_id", nullable = false)
+  private Integer storeId;
 
   @Column(name = "first_name", nullable = false)
   private String firstName;

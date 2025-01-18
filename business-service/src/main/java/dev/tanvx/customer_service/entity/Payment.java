@@ -30,9 +30,8 @@ public class Payment {
   @Column(name = "payment_id")
   private Integer paymentId;
 
-  @ManyToOne
-  @JoinColumn(name = "customer_id", nullable = false)
-  private Customer customer;
+  @Column(name = "customer_id", nullable = false)
+  private Integer customerId;
 
   @ManyToOne
   @JoinColumn(name = "staff_id", nullable = false)

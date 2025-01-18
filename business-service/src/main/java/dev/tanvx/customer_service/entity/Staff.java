@@ -36,9 +36,8 @@ public class Staff {
   @Column(name = "last_name", nullable = false)
   private String lastName;
 
-  @ManyToOne
-  @JoinColumn(name = "address_id", nullable = false)
-  private Address address;
+  @Column(name = "address_id", nullable = false)
+  private Integer addressId;
 
   @Column(name = "email")
   private String email;

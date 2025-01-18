@@ -33,9 +33,8 @@ public class Inventory {
   @JoinColumn(name = "film_id", nullable = false)
   private Film film;
 
-  @ManyToOne
-  @JoinColumn(name = "store_id", nullable = false)
-  private Store store;
+  @Column(name = "store_id", nullable = false)
+  private Integer storeId;
 
   @Column(name = "last_update", nullable = false)
   private ZonedDateTime lastUpdate;

@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
@@ -34,9 +33,8 @@ public class Store {
   @JoinColumn(name = "manager_staff_id", nullable = false)
   private Staff manager;
 
-  @ManyToOne
-  @JoinColumn(name = "address_id", nullable = false)
-  private Address address;
+  @Column(name = "address_id", nullable = false)
+  private Integer addressId;
 
   @Column(name = "last_update", nullable = false)
   private ZonedDateTime lastUpdate;
