@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Logging ###
-.data
+.docker/tempo/tempo-data
