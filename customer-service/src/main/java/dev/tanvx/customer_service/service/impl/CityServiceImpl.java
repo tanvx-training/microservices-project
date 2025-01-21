@@ -1,4 +1,4 @@
-package dev.tanvx.customer_service.service;
+package dev.tanvx.customer_service.service.impl;
 
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.customer_service.repository.CityRepository;

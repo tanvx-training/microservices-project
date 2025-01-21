@@ -1,4 +1,4 @@
-package dev.tanvx.customer_service.dto.request;
+package dev.tanvx.customer_service.dto.request.address;
 
 import lombok.Builder;
 import lombok.Getter;

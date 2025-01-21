@@ -1,4 +1,4 @@
-package dev.tanvx.customer_service.service;
+package dev.tanvx.customer_service.service.impl;
 
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
@@ -7,17 +7,24 @@ import dev.tanvx.common_library.specification.enums.Operator;
 import dev.tanvx.common_library.specification.request.FilterRequest;
 import dev.tanvx.common_library.specification.request.SearchRequest;
 import dev.tanvx.common_library.util.SearchSpecificationRequestUtils;
-import dev.tanvx.customer_service.dto.request.AddressByCityRequestDTO;
-import dev.tanvx.customer_service.dto.request.AddressByCountryRequestDTO;
-import dev.tanvx.customer_service.dto.request.AddressByIdRequestDTO;
-import dev.tanvx.customer_service.dto.request.AddressesRequestDTO;
-import dev.tanvx.customer_service.dto.response.AddressByCityResponseDTO;
-import dev.tanvx.customer_service.dto.response.AddressByCountryResponseDTO;
-import dev.tanvx.customer_service.dto.response.AddressByIdResponseDTO;
-import dev.tanvx.customer_service.dto.response.AddressesResponseDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressByCityRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressByCountryRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressByIdRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressCreateRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressUpdateRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressesRequestDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressByCityResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressByCountryResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressByIdResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressUpdateResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressesResponseDTO;
 import dev.tanvx.customer_service.entity.Address;
+import dev.tanvx.customer_service.entity.City;
 import dev.tanvx.customer_service.repository.AddressRepository;
+import dev.tanvx.customer_service.repository.CityRepository;
 import dev.tanvx.customer_service.service.AddressService;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +36,8 @@ import org.springframework.stereotype.Service;
 public class AddressServiceImpl implements AddressService {
 
   private final AddressRepository addressRepository;
+
+  private final CityRepository cityRepository;
 
   private final SearchSpecificationRequestUtils searchSpecificationRequestUtils;
 
@@ -156,5 +165,52 @@ public class AddressServiceImpl implements AddressService {
                 .countryName(address.getCity().getCountry().getName())
                 .build())
             .build());
+  }
+
+  @Override
+  public AddressCreateResponseDTO createAddress(AddressCreateRequestDTO requestDTO) {
+    Address address = Address.builder()
+        .address(requestDTO.getAddress())
+        .address2(requestDTO.getAddress2())
+        .district(requestDTO.getDistrict())
+        .postalCode(requestDTO.getPostalCode())
+        .phone(requestDTO.getPhone())
+        .lastUpdate(OffsetDateTime.now())
+        .city(cityRepository.findById(requestDTO.getCityId())
+            .orElse(City.builder().build()))
+        .build();
+    addressRepository.save(address);
+    return AddressCreateResponseDTO.builder()
+        .addressId(address.getAddressId())
+        .lastUpdate(address.getLastUpdate())
+        .build();
+  }
+
+  @Override
+  public AddressUpdateResponseDTO updateAddress(Integer addressId, AddressUpdateRequestDTO requestDTO)
+      throws ServiceException {
+    Address address = addressRepository.findAddressByAddressId(addressId)
+        .orElseThrow(() -> new ServiceException(ADDRESS_NOT_FOUND));
+    address.setAddress(requestDTO.getAddress());
+    address.setAddress2(requestDTO.getAddress2());
+    address.setDistrict(requestDTO.getDistrict());
+    address.setPostalCode(requestDTO.getPostalCode());
+    address.setPhone(requestDTO.getPhone());
+    address.setCity(cityRepository.findById(requestDTO.getCityId())
+        .orElse(City.builder().build()));
+    address.setLastUpdate(OffsetDateTime.now());
+    addressRepository.save(address);
+    return AddressUpdateResponseDTO.builder()
+        .addressId(address.getAddressId())
+        .lastUpdate(address.getLastUpdate())
+        .build();
+  }
+
+  @Override
+  public Void deleteAddress(Integer addressId) throws ServiceException {
+    Address address = addressRepository.findAddressByAddressId(addressId)
+        .orElseThrow(() -> new ServiceException(ADDRESS_NOT_FOUND));
+    addressRepository.delete(address);
+    return null;
   }
 }

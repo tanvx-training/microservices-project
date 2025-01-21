@@ -1,4 +1,4 @@
-package dev.tanvx.customer_service.dto.response;
+package dev.tanvx.customer_service.dto.response.address;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

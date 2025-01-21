@@ -8,14 +8,18 @@ import dev.tanvx.common_library.model.MessageProperties;
 import dev.tanvx.common_library.model.ResponseConstants;
 import dev.tanvx.common_library.util.MessageUtils;
 import dev.tanvx.common_library.util.ValidationUtils;
-import dev.tanvx.customer_service.dto.request.AddressByCityRequestDTO;
-import dev.tanvx.customer_service.dto.request.AddressByCountryRequestDTO;
-import dev.tanvx.customer_service.dto.request.AddressByIdRequestDTO;
-import dev.tanvx.customer_service.dto.request.AddressesRequestDTO;
-import dev.tanvx.customer_service.dto.response.AddressByCityResponseDTO;
-import dev.tanvx.customer_service.dto.response.AddressByCountryResponseDTO;
-import dev.tanvx.customer_service.dto.response.AddressByIdResponseDTO;
-import dev.tanvx.customer_service.dto.response.AddressesResponseDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressByCityRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressByCountryRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressByIdRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressCreateRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressUpdateRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressesRequestDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressByCityResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressByCountryResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressByIdResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressUpdateResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressesResponseDTO;
 import dev.tanvx.customer_service.entity.Address;
 import dev.tanvx.customer_service.service.AddressService;
 import dev.tanvx.customer_service.service.CityService;
@@ -150,6 +154,72 @@ public class AddressUseCase {
     } catch (IllegalArgumentException e) {
       throw new ValidationException(List.of(SORT_VALIDATION_ERROR));
     } catch (Exception e) {
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
+  }
+
+  public ApiResponse<AddressCreateResponseDTO> createAddress(AddressCreateRequestDTO requestDTO) {
+    try {
+      // Validate page and size parameter
+      validationUtils.validateRequest(requestDTO);
+
+      cityService.checkCityById(requestDTO.getCityId());
+
+      AddressCreateResponseDTO addressCreateResponseDTO = addressService.createAddress(requestDTO);
+      return ApiResponse.<AddressCreateResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(addressCreateResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (CityService.CITY_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
+  }
+
+  public ApiResponse<AddressUpdateResponseDTO> updateAddress(Integer addressId,
+      AddressUpdateRequestDTO requestDTO) {
+    try {
+      // Validate page and size parameter
+      validationUtils.validateRequest(requestDTO);
+
+      cityService.checkCityById(requestDTO.getCityId());
+
+      AddressUpdateResponseDTO addressUpdateResponseDTO = addressService.updateAddress(addressId,
+          requestDTO);
+      return ApiResponse.<AddressUpdateResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(addressUpdateResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (CityService.CITY_NOT_FOUND.equals(e.getCauseId())
+      || AddressService.ADDRESS_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
+  }
+
+  public ApiResponse<Void> deleteAddress(Integer addressId){
+    try {
+      return ApiResponse.<Void>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(addressService.deleteAddress(addressId))
+          .build();
+    } catch (ServiceException e) {
+      if (AddressService.ADDRESS_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
       throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
           messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
     }
