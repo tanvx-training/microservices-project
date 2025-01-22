@@ -2,8 +2,8 @@ package dev.tanvx.customer_service.controller;
 
 import dev.tanvx.common_library.model.ApiResponse;
 import dev.tanvx.customer_service.controller.usecase.AddressUseCase;
-import dev.tanvx.customer_service.dto.request.address.AddressByCityRequestDTO;
-import dev.tanvx.customer_service.dto.request.address.AddressByCountryRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressesByCityRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressesByCountryRequestDTO;
 import dev.tanvx.customer_service.dto.request.address.AddressCreateRequestDTO;
 import dev.tanvx.customer_service.dto.request.address.AddressUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.address.AddressesRequestDTO;
@@ -56,14 +56,14 @@ public class AddressController {
   }
 
   @GetMapping("/{countryId}/countries")
-  public ResponseEntity<ApiResponse<Page<AddressByCountryResponseDTO>>> getAddressByCountry(
+  public ResponseEntity<ApiResponse<Page<AddressByCountryResponseDTO>>> getAddressesByCountry(
       @PathVariable("countryId") Integer countryId,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size,
       @RequestParam(value = "sort", defaultValue = "addressId,asc") String sort) {
 
-    return ResponseEntity.ok(addressUseCase.getAddressByCountry(
-        AddressByCountryRequestDTO.builder()
+    return ResponseEntity.ok(addressUseCase.getAddressesByCountry(
+        AddressesByCountryRequestDTO.builder()
             .countryId(countryId)
             .page(page)
             .size(size)
@@ -73,14 +73,14 @@ public class AddressController {
   }
 
   @GetMapping("/{cityId}/cities")
-  public ResponseEntity<ApiResponse<Page<AddressByCityResponseDTO>>> getAddressByCity(
+  public ResponseEntity<ApiResponse<Page<AddressByCityResponseDTO>>> getAddressesByCity(
       @PathVariable("cityId") Integer cityId,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size,
       @RequestParam(value = "sort", defaultValue = "addressId,asc") String sort) {
 
-    return ResponseEntity.ok(addressUseCase.getAddressByCity(
-        AddressByCityRequestDTO.builder()
+    return ResponseEntity.ok(addressUseCase.getAddressesByCity(
+        AddressesByCityRequestDTO.builder()
             .cityId(cityId)
             .page(page)
             .size(size)

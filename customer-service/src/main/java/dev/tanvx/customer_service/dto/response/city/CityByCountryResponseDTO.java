@@ -1,19 +1,17 @@
-package dev.tanvx.customer_service.dto.response.address;
+package dev.tanvx.customer_service.dto.response.city;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.time.OffsetDateTime;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.ToString;
 
-@Data
+@Getter
 @Builder
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AddressUpdateResponseDTO {
+public class CityByCountryResponseDTO {
 
-  private final Integer addressId;
-
-  private final OffsetDateTime lastUpdate;
+  private Integer cityId;
+  private String name;
 }

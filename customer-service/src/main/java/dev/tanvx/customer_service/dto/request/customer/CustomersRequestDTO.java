@@ -1,4 +1,4 @@
-package dev.tanvx.customer_service.dto.request.address;
+package dev.tanvx.customer_service.dto.request.customer;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AddressesRequestDTO {
+public class CustomersRequestDTO {
   @Min(value = 0, message = "Page number must be greater than zero.")
   private final Integer page;
   @Min(value = 1, message = "Size number must be greater than one.")

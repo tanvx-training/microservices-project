@@ -2,13 +2,22 @@ package dev.tanvx.customer_service.controller;
 
 import dev.tanvx.common_library.model.ApiResponse;
 import dev.tanvx.customer_service.controller.usecase.CountryUseCase;
+import dev.tanvx.customer_service.dto.request.country.CountriesRequestDTO;
+import dev.tanvx.customer_service.dto.request.country.CountryCreateRequestDTO;
+import dev.tanvx.customer_service.dto.request.country.CountryUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.response.country.CountriesResponseDTO;
+import dev.tanvx.customer_service.dto.response.country.CountryByIdResponseDTO;
+import dev.tanvx.customer_service.dto.response.country.CountryCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.country.CountryUpdateResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,21 +51,20 @@ public class CountryController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResponse<CountryByIdResponseDTO>> createCountry(
+  public ResponseEntity<ApiResponse<CountryCreateResponseDTO>> createCountry(
       @RequestBody CountryCreateRequestDTO requestDTO) {
     return ResponseEntity.ok(countryUseCase.createCountry(requestDTO));
   }
 
   @PutMapping("/{countryId}/")
-  public ResponseEntity<ApiResponse<CountryByIdResponseDTO>> updateCountry(
+  public ResponseEntity<ApiResponse<CountryUpdateResponseDTO>> updateCountry(
       @PathVariable("countryId") Integer countryId,
       @RequestBody CountryUpdateRequestDTO requestDTO) {
-    return ResponseEntity.ok(countryUseCase.updateCountry(countryId, requestDTO
-    ))
+    return ResponseEntity.ok(countryUseCase.updateCountry(countryId, requestDTO));
   }
 
   @DeleteMapping("/{countryId}/")
-  public ResponseEntity<ApiResponse<CountryByIdResponseDTO>> deleteCountry(
+  public ResponseEntity<ApiResponse<Void>> deleteCountry(
       @PathVariable("countryId") Integer countryId) {
     return ResponseEntity.ok(countryUseCase.deleteCountry(countryId));
   }

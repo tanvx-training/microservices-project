@@ -12,11 +12,12 @@ import lombok.ToString;
 @Builder
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AddressesRequestDTO {
-  @Min(value = 0, message = "Page number must be greater than zero.")
-  private final Integer page;
-  @Min(value = 1, message = "Size number must be greater than one.")
-  @Max(value = 100, message = "Size number must be equal or less than 100.")
-  private final Integer size;
-  private final String sort;
+public class AddressesByCountryRequestDTO {
+    private final Integer countryId;
+    @Min(value = 0, message = "Page number must be greater than zero.")
+    private final Integer page;
+    @Min(value = 1, message = "Size number must be greater than one.")
+    @Max(value = 100, message = "Size number must be equal or less than 100.")
+    private final Integer size;
+    private final String sort;
 }

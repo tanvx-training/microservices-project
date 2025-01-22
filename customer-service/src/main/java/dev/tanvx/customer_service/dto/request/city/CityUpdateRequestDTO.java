@@ -1,7 +1,8 @@
-package dev.tanvx.customer_service.dto.request.address;
+package dev.tanvx.customer_service.dto.request.city;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,6 +11,11 @@ import lombok.ToString;
 @Builder
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AddressByIdRequestDTO {
-    private final Integer addressId;
+public class CityUpdateRequestDTO {
+
+  @NotNull(message = "City name is required")
+  private String name;
+
+  @NotNull(message = "Country ID is required")
+  private Integer countryId;
 }

@@ -7,8 +7,8 @@ import dev.tanvx.common_library.specification.enums.Operator;
 import dev.tanvx.common_library.specification.request.FilterRequest;
 import dev.tanvx.common_library.specification.request.SearchRequest;
 import dev.tanvx.common_library.util.SearchSpecificationRequestUtils;
-import dev.tanvx.customer_service.dto.request.address.AddressByCityRequestDTO;
-import dev.tanvx.customer_service.dto.request.address.AddressByCountryRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressesByCityRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressesByCountryRequestDTO;
 import dev.tanvx.customer_service.dto.request.address.AddressByIdRequestDTO;
 import dev.tanvx.customer_service.dto.request.address.AddressCreateRequestDTO;
 import dev.tanvx.customer_service.dto.request.address.AddressUpdateRequestDTO;
@@ -42,7 +42,7 @@ public class AddressServiceImpl implements AddressService {
   private final SearchSpecificationRequestUtils searchSpecificationRequestUtils;
 
   @Override
-  public Page<AddressByCityResponseDTO> getByCity(AddressByCityRequestDTO requestDTO) {
+  public Page<AddressByCityResponseDTO> getAddressesByCity(AddressesByCityRequestDTO requestDTO) {
 
     // Building request
     FilterRequest filterRequest = FilterRequest.builder()
@@ -99,7 +99,8 @@ public class AddressServiceImpl implements AddressService {
   }
 
   @Override
-  public Page<AddressByCountryResponseDTO> getByCountry(AddressByCountryRequestDTO requestDTO) {
+  public Page<AddressByCountryResponseDTO> getAddressesByCountry(
+      AddressesByCountryRequestDTO requestDTO) {
 
     // Building request
     FilterRequest filterRequest = FilterRequest.builder()
@@ -191,6 +192,7 @@ public class AddressServiceImpl implements AddressService {
       throws ServiceException {
     Address address = addressRepository.findAddressByAddressId(addressId)
         .orElseThrow(() -> new ServiceException(ADDRESS_NOT_FOUND));
+
     address.setAddress(requestDTO.getAddress());
     address.setAddress2(requestDTO.getAddress2());
     address.setDistrict(requestDTO.getDistrict());
@@ -200,6 +202,7 @@ public class AddressServiceImpl implements AddressService {
         .orElse(City.builder().build()));
     address.setLastUpdate(OffsetDateTime.now());
     addressRepository.save(address);
+
     return AddressUpdateResponseDTO.builder()
         .addressId(address.getAddressId())
         .lastUpdate(address.getLastUpdate())
@@ -207,10 +210,10 @@ public class AddressServiceImpl implements AddressService {
   }
 
   @Override
-  public Void deleteAddress(Integer addressId) throws ServiceException {
-    Address address = addressRepository.findAddressByAddressId(addressId)
-        .orElseThrow(() -> new ServiceException(ADDRESS_NOT_FOUND));
-    addressRepository.delete(address);
-    return null;
+  public void deleteAddress(Integer addressId) throws ServiceException {
+    if (!addressRepository.existsById(addressId)) {
+      throw new ServiceException(ADDRESS_NOT_FOUND);
+    }
+    addressRepository.deleteById(addressId);
   }
 }

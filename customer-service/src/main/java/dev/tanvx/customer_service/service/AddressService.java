@@ -1,8 +1,8 @@
 package dev.tanvx.customer_service.service;
 
 import dev.tanvx.common_library.exception.ServiceException;
-import dev.tanvx.customer_service.dto.request.address.AddressByCityRequestDTO;
-import dev.tanvx.customer_service.dto.request.address.AddressByCountryRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressesByCityRequestDTO;
+import dev.tanvx.customer_service.dto.request.address.AddressesByCountryRequestDTO;
 import dev.tanvx.customer_service.dto.request.address.AddressByIdRequestDTO;
 import dev.tanvx.customer_service.dto.request.address.AddressCreateRequestDTO;
 import dev.tanvx.customer_service.dto.request.address.AddressUpdateRequestDTO;
@@ -19,11 +19,11 @@ public interface AddressService {
 
     String ADDRESS_NOT_FOUND = "ADDRESS_NOT_FOUND";
 
-    Page<AddressByCityResponseDTO> getByCity(AddressByCityRequestDTO requestDTO);
+    Page<AddressByCityResponseDTO> getAddressesByCity(AddressesByCityRequestDTO requestDTO);
 
     AddressByIdResponseDTO getById(AddressByIdRequestDTO requestDTO) throws ServiceException;
 
-    Page<AddressByCountryResponseDTO> getByCountry(AddressByCountryRequestDTO requestDTO);
+    Page<AddressByCountryResponseDTO> getAddressesByCountry(AddressesByCountryRequestDTO requestDTO);
 
     Page<AddressesResponseDTO> getAddresses(AddressesRequestDTO requestDTO);
 
@@ -32,5 +32,5 @@ public interface AddressService {
     AddressUpdateResponseDTO updateAddress(Integer addressId, AddressUpdateRequestDTO requestDTO)
         throws ServiceException;
 
-    Void deleteAddress(Integer addressId) throws ServiceException;
+    void deleteAddress(Integer addressId) throws ServiceException;
 }
