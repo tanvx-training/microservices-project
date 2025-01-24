@@ -12,4 +12,6 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CountryByIdResponseDTO {
 
+  private Integer countryId;
+  private String name;
 }

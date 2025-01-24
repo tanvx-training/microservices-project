@@ -4,7 +4,9 @@ import dev.tanvx.common_library.exception.BusinessException;
 import dev.tanvx.common_library.exception.ValidationException;
 import dev.tanvx.common_library.exception.dto.ErrorResponse;
 import dev.tanvx.common_library.exception.dto.ValidationErrorResponse;
+import dev.tanvx.common_library.model.ApiResponse;
 import dev.tanvx.common_library.model.MessageProperties;
+import dev.tanvx.common_library.model.ResponseConstants;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -30,7 +32,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   // Handle validation exception
   @ExceptionHandler(ValidationException.class)
-  public ResponseEntity<ValidationErrorResponse> handleValidationException(
+  public ApiResponse<ValidationErrorResponse> handleValidationException(
       ValidationException error) {
     // Logging
     log.error(error.getMessage(), Objects.isNull(error.getCause()) ? error : error.getCause());
@@ -57,38 +59,48 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         .errorMessages(error.getErrorMessages())
         .build();
     // Return response
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    return ApiResponse.<ValidationErrorResponse>builder()
+        .status(ResponseConstants.ERROR_STATUS)
+        .message(ResponseConstants.ERROR_MESSAGE)
+        .data(response)
+        .build();
   }
 
   // Handle service exception
   @ExceptionHandler(BusinessException.class)
-  public ResponseEntity<ErrorResponse> handleBusinessExceptionException(BusinessException error) {
+  public ApiResponse<ErrorResponse> handleBusinessExceptionException(BusinessException error) {
     // Logging
     log.error(CollectionUtils.isEmpty(error.getMessages())
             ? error.getMessage()
             : error.getMessages().toString(),
         Objects.isNull(error.getCause()) ? error : error.getCause());
     // Return response
-    return ResponseEntity.status(error.getHttpStatus())
-        .body(ErrorResponse
+    return ApiResponse.<ErrorResponse>builder()
+        .status(ResponseConstants.ERROR_STATUS)
+        .message(ResponseConstants.ERROR_MESSAGE)
+        .data(ErrorResponse
             .builder()
             .result(RESULT_NG)
             .errorMessages(CollectionUtils.isEmpty(error.getMessages())
                 ? Collections.singletonList(error.getMessage())
                 : error.getMessages())
-            .build());
+            .build())
+        .build();
   }
 
   @ExceptionHandler(Throwable.class)
-  public ResponseEntity<ErrorResponse> handleThrowable(Throwable throwable) {
+  public ApiResponse<ErrorResponse> handleThrowable(Throwable throwable) {
 
     String errorMessage = "An unexpected error occurred: " + throwable.getMessage();
 
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ErrorResponse
+    return ApiResponse.<ErrorResponse>builder()
+        .status(ResponseConstants.ERROR_STATUS)
+        .message(ResponseConstants.ERROR_MESSAGE)
+        .data(ErrorResponse
             .builder()
             .result(RESULT_NG)
             .errorMessages(Collections.singletonList(errorMessage))
-            .build());
+            .build())
+        .build();
   }
 }
