@@ -15,6 +15,7 @@ import dev.tanvx.customer_service.dto.response.country.CountryUpdateResponseDTO;
 import dev.tanvx.customer_service.entity.Country;
 import dev.tanvx.customer_service.repository.CountryRepository;
 import dev.tanvx.customer_service.service.CountryService;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -71,6 +72,7 @@ public class CountryServiceImpl implements CountryService {
         }
         Country country = Country.builder()
             .name(requestDTO.getName())
+            .lastUpdate(ZonedDateTime.now())
             .build();
         countryRepository.save(country);
         return CountryCreateResponseDTO.builder()
@@ -88,6 +90,7 @@ public class CountryServiceImpl implements CountryService {
         }
         Country country = countryOptional.get();
         country.setName(requestDTO.getName());
+        country.setLastUpdate(ZonedDateTime.now());
         countryRepository.save(country);
         return CountryUpdateResponseDTO.builder()
             .countryId(country.getCountryId())

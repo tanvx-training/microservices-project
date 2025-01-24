@@ -85,10 +85,10 @@ public class CountryUseCase {
       CountryCreateResponseDTO countryCreateResponseDTO = countryService.createCountry(requestDTO);
 
       return ApiResponse.<CountryCreateResponseDTO>builder()
-         .status(ResponseConstants.SUCCESS_STATUS)
-         .message(ResponseConstants.SUCCESS_MESSAGE)
-         .data(countryCreateResponseDTO)
-         .build();
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(countryCreateResponseDTO)
+          .build();
     } catch (Exception e) {
       throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
           messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
@@ -96,18 +96,20 @@ public class CountryUseCase {
   }
 
   @Transactional
-  public ApiResponse<CountryUpdateResponseDTO> updateCountry(Integer countryId, CountryUpdateRequestDTO requestDTO) {
+  public ApiResponse<CountryUpdateResponseDTO> updateCountry(Integer countryId,
+      CountryUpdateRequestDTO requestDTO) {
     try {
       // Validate request
       validationUtils.validateRequest(requestDTO);
 
-      CountryUpdateResponseDTO countryUpdateResponseDTO = countryService.updateCountry(countryId, requestDTO);
+      CountryUpdateResponseDTO countryUpdateResponseDTO = countryService.updateCountry(countryId,
+          requestDTO);
 
       return ApiResponse.<CountryUpdateResponseDTO>builder()
-         .status(ResponseConstants.SUCCESS_STATUS)
-         .message(ResponseConstants.SUCCESS_MESSAGE)
-         .data(countryUpdateResponseDTO)
-         .build();
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(countryUpdateResponseDTO)
+          .build();
     } catch (ServiceException e) {
       if (CountryService.COUNTRY_NOT_FOUND.equals(e.getCauseId())) {
         throw new BusinessException(HttpStatus.NOT_FOUND,

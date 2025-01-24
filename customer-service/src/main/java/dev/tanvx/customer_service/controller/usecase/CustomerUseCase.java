@@ -22,15 +22,18 @@ public class CustomerUseCase {
     return null;
   }
 
-  public ApiResponse<Page<CustomersByAddressResponseDTO>> getCustomersByAddress(CustomersByAddressRequestDTO build) {
+  public ApiResponse<Page<CustomersByAddressResponseDTO>> getCustomersByAddress(
+      CustomersByAddressRequestDTO build) {
     return null;
   }
 
-  public ApiResponse<CustomerCreateResponseDTO> createCustomer(CustomerCreateRequestDTO responseDTO) {
+  public ApiResponse<CustomerCreateResponseDTO> createCustomer(
+      CustomerCreateRequestDTO responseDTO) {
     return null;
   }
 
-  public ApiResponse<CustomerUpdateResponseDTO> updateCustomer(Integer customerId, CustomerUpdateRequestDTO responseDTO) {
+  public ApiResponse<CustomerUpdateResponseDTO> updateCustomer(Integer customerId,
+      CustomerUpdateRequestDTO responseDTO) {
     return null;
   }
 
