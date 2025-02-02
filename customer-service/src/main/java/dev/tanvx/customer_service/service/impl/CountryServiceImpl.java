@@ -84,11 +84,8 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public CountryUpdateResponseDTO updateCountry(Integer countryId,
         CountryUpdateRequestDTO requestDTO) throws ServiceException {
-        Optional<Country> countryOptional = countryRepository.findCountryByCountryId(countryId);
-        if (countryOptional.isEmpty()) {
-            throw new ServiceException(COUNTRY_NOT_FOUND);
-        }
-        Country country = countryOptional.get();
+        Country country = countryRepository.findCountryByCountryId(countryId)
+            .orElseThrow(() -> new ServiceException(COUNTRY_NOT_FOUND));
         country.setName(requestDTO.getName());
         country.setLastUpdate(ZonedDateTime.now());
         countryRepository.save(country);

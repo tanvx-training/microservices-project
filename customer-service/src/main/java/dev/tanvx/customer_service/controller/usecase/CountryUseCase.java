@@ -89,7 +89,11 @@ public class CountryUseCase {
           .message(ResponseConstants.SUCCESS_MESSAGE)
           .data(countryCreateResponseDTO)
           .build();
-    } catch (Exception e) {
+    } catch (ServiceException e) {
+      if (CountryService.COUNTRY_ALREADY_EXISTS.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.BAD_REQUEST,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
       throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
           messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
     }
