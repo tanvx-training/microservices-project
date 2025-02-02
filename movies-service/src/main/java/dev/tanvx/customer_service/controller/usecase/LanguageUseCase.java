@@ -1,34 +1,38 @@
 package dev.tanvx.customer_service.controller.usecase;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.ZonedDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import dev.tanvx.common_library.model.ApiResponse;
+import dev.tanvx.customer_service.dto.request.language.LanguageCreateRequestDTO;
+import dev.tanvx.customer_service.dto.request.language.LanguageUpdateRequestDTO;
+import dev.tanvx.customer_service.dto.request.language.LanguagesRequestDTO;
+import dev.tanvx.customer_service.dto.response.language.LanguageByIdResponseDTO;
+import dev.tanvx.customer_service.dto.response.language.LanguageCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.language.LanguageUpdateResponseDTO;
+import dev.tanvx.customer_service.dto.response.language.LanguagesResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
-@Setter
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "language")
+@Service
 public class LanguageUseCase {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "language_id")
-  private Integer languageId;
 
-  @Column(nullable = false, length = 20)
-  private String name;
+  public ApiResponse<Page<LanguagesResponseDTO>> getLanguages(LanguagesRequestDTO requestDTO) {
+    return null;
+  }
 
-  @Column(name = "last_update", nullable = false)
-  private ZonedDateTime lastUpdate;
+  public ApiResponse<LanguageByIdResponseDTO> getLanguageById(Integer languageId) {
+    return null;
+  }
+
+  public ApiResponse<LanguageCreateResponseDTO> createLanguage(
+      LanguageCreateRequestDTO requestDTO) {
+    return null;
+  }
+
+  public ApiResponse<LanguageUpdateResponseDTO> updateLanguage(Integer languageId,
+      LanguageUpdateRequestDTO requestDTO) {
+    return null;
+  }
+
+  public ApiResponse<Void> deleteLanguage(Integer languageId) {
+    return null;
+  }
 }
