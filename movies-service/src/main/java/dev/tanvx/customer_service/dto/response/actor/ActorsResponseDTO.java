@@ -12,4 +12,7 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ActorsResponseDTO {
 
+  private Integer actorId;
+  private String firstName;
+  private String lastName;
 }

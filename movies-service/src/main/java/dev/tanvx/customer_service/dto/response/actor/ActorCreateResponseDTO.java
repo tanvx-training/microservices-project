@@ -1,5 +1,19 @@
 package dev.tanvx.customer_service.dto.response.actor;
 
-public class ActorCreateResponseDTO {
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.time.ZonedDateTime;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
+@Getter
+@Builder
+@ToString
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class ActorCreateResponseDTO {
+  private Integer actorId;
+  private String firstName;
+  private String lastName;
+  private ZonedDateTime lastUpdate;
 }
