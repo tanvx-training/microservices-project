@@ -2,6 +2,7 @@ package dev.tanvx.customer_service.dto.response.language;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,5 +12,7 @@ import lombok.ToString;
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LanguageCreateResponseDTO {
-
+  private Integer languageId;
+  private String name;
+  private ZonedDateTime lastUpdate;
 }
