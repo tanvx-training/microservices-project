@@ -2,6 +2,7 @@ package dev.tanvx.customer_service.dto.response.film;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,12 +17,21 @@ public class FilmsResponseDTO {
   private String title;
   private String description;
   private Integer releaseYear;
-  private Integer languageId;
-  private Integer originalLanguageId;
+  private LanguageDTO language;
+  private LanguageDTO originalLanguage;
   private Integer rentalDuration;
-  private String rentalRate;
+  private BigDecimal rentalRate;
   private Integer length;
-  private String replacementCost;
+  private BigDecimal replacementCost;
   private String rating;
   private ZonedDateTime lastUpdate;
+
+  @Getter
+  @Builder
+  @ToString
+  @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+  public static class LanguageDTO {
+    private Integer languageId;
+    private String name;
+  }
 }

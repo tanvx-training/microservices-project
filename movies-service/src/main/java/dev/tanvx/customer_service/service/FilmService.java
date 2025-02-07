@@ -15,6 +15,12 @@ public interface FilmService {
 
   String FILM_NOT_FOUND = "FILM_NOT_FOUND";
 
+  String FILM_ALREADY_EXISTS = "FILM_ALREADY_EXISTS";
+
+  String INVALID_ACTOR_ID = "INVALID_ACTOR_ID";
+
+  String INVALID_CATEGORY_ID = "INVALID_CATEGORY_ID";
+
   void checkFilmById(Integer id) throws ServiceException;
 
   Page<FilmsResponseDTO> getFilms(FilmsRequestDTO requestDTO);

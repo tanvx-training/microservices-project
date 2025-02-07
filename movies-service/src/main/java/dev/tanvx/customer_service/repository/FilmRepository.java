@@ -1,6 +1,7 @@
 package dev.tanvx.customer_service.repository;
 
 import dev.tanvx.customer_service.entity.Film;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -9,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface FilmRepository extends JpaRepository<Film, Integer>,
     JpaSpecificationExecutor<Film> {
 
+  Optional<Film> findByTitle(String title);
 }

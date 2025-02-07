@@ -12,4 +12,5 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FilmByIdRequestDTO {
 
+  private Integer id;
 }
