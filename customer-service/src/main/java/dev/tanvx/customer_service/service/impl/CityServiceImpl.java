@@ -21,6 +21,7 @@ import dev.tanvx.customer_service.dto.response.city.CityByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityCreateResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityUpdateResponseDTO;
 import dev.tanvx.customer_service.entity.City;
+import dev.tanvx.customer_service.repository.AddressRepository;
 import dev.tanvx.customer_service.repository.CityRepository;
 import dev.tanvx.customer_service.repository.CountryRepository;
 import dev.tanvx.customer_service.service.CityService;
@@ -35,123 +36,130 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CityServiceImpl implements CityService {
 
-    private final CityRepository cityRepository;
+  private final CityRepository cityRepository;
 
-    private final CountryRepository countryRepository;
+  private final CountryRepository countryRepository;
 
-    private final SearchSpecificationRequestUtils searchSpecificationRequestUtils;
+  private final AddressRepository addressRepository;
 
-    @Override
-    public void checkCityById(Integer id) throws ServiceException {
-        cityRepository.findById(id)
-                .orElseThrow(() -> new ServiceException(CITY_NOT_FOUND));
-    }
+  private final SearchSpecificationRequestUtils searchSpecificationRequestUtils;
 
-    @Override
-    public Page<CitiesResponseDTO> getCities(CitiesRequestDTO requestDTO) {
-        SearchRequest searchRequest = SearchRequest.builder()
-            .sorts(searchSpecificationRequestUtils.buildSortRequestList(requestDTO.getSort()))
-            .page(requestDTO.getPage())
-            .size(requestDTO.getSize())
-            .build();
-        SearchSpecification<City> specification = new SearchSpecification<>(searchRequest);
-        Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
-        return cityRepository.findAll(specification, pageable)
-            .map(city -> CitiesResponseDTO.builder()
-                .cityId(city.getCityId())
-                .name(city.getName())
-                .country(CountryDTO.builder()
-                    .countryId(city.getCountry().getCountryId())
-                    .countryName(city.getCountry().getName())
-                    .build())
-                .build());
-    }
+  @Override
+  public void checkCityById(Integer id) throws ServiceException {
+    cityRepository.findById(id)
+        .orElseThrow(() -> new ServiceException(CITY_NOT_FOUND));
+  }
 
-    @Override
-    public CityByIdResponseDTO getCityById(CityByIdRequestDTO requestDTO) throws ServiceException {
-
-        return cityRepository.findById(requestDTO.getCityId())
-            .map(entity -> CityByIdResponseDTO.builder()
-                .cityId(entity.getCityId())
-                .name(entity.getName())
-                .country(CountryDTO.builder()
-                    .countryId(entity.getCountry().getCountryId())
-                    .countryName(entity.getCountry().getName())
-                    .build())
+  @Override
+  public Page<CitiesResponseDTO> getCities(CitiesRequestDTO requestDTO) {
+    SearchRequest searchRequest = SearchRequest.builder()
+        .sorts(searchSpecificationRequestUtils.buildSortRequestList(requestDTO.getSort()))
+        .page(requestDTO.getPage())
+        .size(requestDTO.getSize())
+        .build();
+    SearchSpecification<City> specification = new SearchSpecification<>(searchRequest);
+    Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(),
+        searchRequest.getSize());
+    return cityRepository.findAll(specification, pageable)
+        .map(city -> CitiesResponseDTO.builder()
+            .cityId(city.getCityId())
+            .name(city.getName())
+            .country(CountryDTO.builder()
+                .countryId(city.getCountry().getCountryId())
+                .countryName(city.getCountry().getName())
                 .build())
-            .orElseThrow(() -> new ServiceException(CITY_NOT_FOUND));
-    }
+            .build());
+  }
 
-    @Override
-    public Page<CityByCountryResponseDTO> getCitiesByCountry(CitiesByCountryRequestDTO requestDTO) {
+  @Override
+  public CityByIdResponseDTO getCityById(CityByIdRequestDTO requestDTO) throws ServiceException {
 
-        FilterRequest filterRequest = FilterRequest.builder()
-            .key("country.countryId")
-            .operator(Operator.EQUAL)
-            .fieldType(FieldType.INTEGER)
-            .value(requestDTO.getCountryId())
-            .build();
+    return cityRepository.findById(requestDTO.getCityId())
+        .map(entity -> CityByIdResponseDTO.builder()
+            .cityId(entity.getCityId())
+            .name(entity.getName())
+            .country(CountryDTO.builder()
+                .countryId(entity.getCountry().getCountryId())
+                .countryName(entity.getCountry().getName())
+                .build())
+            .build())
+        .orElseThrow(() -> new ServiceException(CITY_NOT_FOUND));
+  }
 
-        SearchRequest searchRequest = SearchRequest.builder()
-            .filters(List.of(filterRequest))
-            .sorts(searchSpecificationRequestUtils.buildSortRequestList(requestDTO.getSort()))
-            .page(requestDTO.getPage())
-            .size(requestDTO.getSize())
-            .build();
+  @Override
+  public Page<CityByCountryResponseDTO> getCitiesByCountry(CitiesByCountryRequestDTO requestDTO) {
 
-        SearchSpecification<City> specification = new SearchSpecification<>(searchRequest);
-        Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
+    FilterRequest filterRequest = FilterRequest.builder()
+        .key("country.countryId")
+        .operator(Operator.EQUAL)
+        .fieldType(FieldType.INTEGER)
+        .value(requestDTO.getCountryId())
+        .build();
 
-        return cityRepository.findAll(specification, pageable)
-            .map(city -> CityByCountryResponseDTO.builder()
-                .cityId(city.getCityId())
-                .name(city.getName())
-                .build());
-    }
+    SearchRequest searchRequest = SearchRequest.builder()
+        .filters(List.of(filterRequest))
+        .sorts(searchSpecificationRequestUtils.buildSortRequestList(requestDTO.getSort()))
+        .page(requestDTO.getPage())
+        .size(requestDTO.getSize())
+        .build();
 
-    @Override
-    public CityCreateResponseDTO createCity(CityCreateRequestDTO requestDTO)
-        throws ServiceException {
+    SearchSpecification<City> specification = new SearchSpecification<>(searchRequest);
+    Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(),
+        searchRequest.getSize());
 
-        City city = City.builder()
-            .name(requestDTO.getName())
-            .country(countryRepository.findById(requestDTO.getCountryId())
-                .orElseThrow(() -> new ServiceException(COUNTRY_NOT_FOUND)))
-            .lastUpdate(OffsetDateTime.now())
-            .build();
-
-        cityRepository.save(city);
-
-        return CityCreateResponseDTO.builder()
+    return cityRepository.findAll(specification, pageable)
+        .map(city -> CityByCountryResponseDTO.builder()
             .cityId(city.getCityId())
-            .lastUpdate(city.getLastUpdate())
-            .build();
-    }
+            .name(city.getName())
+            .build());
+  }
 
-    @Override
-    public CityUpdateResponseDTO updateCity(Integer cityId, CityUpdateRequestDTO requestDTO)
-        throws ServiceException {
+  @Override
+  public CityCreateResponseDTO createCity(CityCreateRequestDTO requestDTO)
+      throws ServiceException {
 
-        City city = cityRepository.findCityByCityId(cityId)
-            .orElseThrow(() -> new ServiceException(CITY_NOT_FOUND));
+    City city = City.builder()
+        .name(requestDTO.getName())
+        .country(countryRepository.findById(requestDTO.getCountryId())
+            .orElseThrow(() -> new ServiceException(COUNTRY_NOT_FOUND)))
+        .lastUpdate(OffsetDateTime.now())
+        .build();
 
-        city.setName(requestDTO.getName());
-        city.setCountry(countryRepository.findById(requestDTO.getCountryId())
-            .orElseThrow(() -> new ServiceException(COUNTRY_NOT_FOUND)));
-        city.setLastUpdate(OffsetDateTime.now());
-        cityRepository.save(city);
+    cityRepository.save(city);
 
-        return CityUpdateResponseDTO.builder()
-            .cityId(city.getCityId())
-            .lastUpdate(city.getLastUpdate())
-            .build();
-    }
+    return CityCreateResponseDTO.builder()
+        .cityId(city.getCityId())
+        .lastUpdate(city.getLastUpdate())
+        .build();
+  }
 
-    @Override
-    public void deleteCity(Integer cityId) throws ServiceException {
-        if (!cityRepository.existsById(cityId)) {
-            throw new ServiceException(CITY_NOT_FOUND);
-        }
-        cityRepository.deleteById(cityId);
-    }
+  @Override
+  public CityUpdateResponseDTO updateCity(Integer cityId, CityUpdateRequestDTO requestDTO)
+      throws ServiceException {
+
+    City city = cityRepository.findCityByCityId(cityId)
+        .orElseThrow(() -> new ServiceException(CITY_NOT_FOUND));
+
+    city.setName(requestDTO.getName());
+    city.setCountry(countryRepository.findById(requestDTO.getCountryId())
+        .orElseThrow(() -> new ServiceException(COUNTRY_NOT_FOUND)));
+    city.setLastUpdate(OffsetDateTime.now());
+    cityRepository.save(city);
+
+    return CityUpdateResponseDTO.builder()
+        .cityId(city.getCityId())
+        .lastUpdate(city.getLastUpdate())
+        .build();
+  }
+
+  @Override
+  public void deleteCity(Integer cityId) throws ServiceException {
+    // Check if city exists
+    City city = cityRepository.findById(cityId)
+        .orElseThrow(() -> new ServiceException(CITY_NOT_FOUND));
+    // Delete address linked to city
+    addressRepository.deleteAllByCity(city);
+    // Delete city
+    cityRepository.delete(city);
+  }
 }

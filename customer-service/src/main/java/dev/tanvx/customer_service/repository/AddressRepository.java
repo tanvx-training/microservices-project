@@ -1,6 +1,7 @@
 package dev.tanvx.customer_service.repository;
 
 import dev.tanvx.customer_service.entity.Address;
+import dev.tanvx.customer_service.entity.City;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface AddressRepository extends JpaRepository<Address, Integer>,
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<Address> findAddressByAddressId(Integer addressId);
+
+  void deleteAllByCity(City city);
 }

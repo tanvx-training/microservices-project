@@ -232,11 +232,12 @@ public class FilmServiceImpl implements FilmService {
     film.setLanguage(Objects.equals(requestDTO.getLanguageId(), film.getLanguage().getLanguageId())
         ? film.getLanguage()
         : languageRepository.findById(requestDTO.getLanguageId())
-           .orElseThrow(() -> new ServiceException(LanguageService.LANGUAGE_NOT_FOUND)));
-    film.setOriginalLanguage(Objects.equals(requestDTO.getOriginalLanguageId(), film.getOriginalLanguage().getLanguageId())
+            .orElseThrow(() -> new ServiceException(LanguageService.LANGUAGE_NOT_FOUND)));
+    film.setOriginalLanguage(Objects.equals(requestDTO.getOriginalLanguageId(),
+        film.getOriginalLanguage().getLanguageId())
         ? film.getOriginalLanguage()
         : languageRepository.findById(requestDTO.getOriginalLanguageId())
-           .orElseThrow(() -> new ServiceException(LanguageService.LANGUAGE_NOT_FOUND)));
+            .orElseThrow(() -> new ServiceException(LanguageService.LANGUAGE_NOT_FOUND)));
     film.setRentalDuration(Objects.equals(requestDTO.getRentalDuration(), film.getRentalDuration())
         ? film.getRentalDuration()
         : requestDTO.getRentalDuration());
@@ -246,9 +247,10 @@ public class FilmServiceImpl implements FilmService {
     film.setLength(Objects.equals(requestDTO.getLength(), film.getLength())
         ? film.getLength()
         : requestDTO.getLength());
-    film.setReplacementCost(Objects.equals(requestDTO.getReplacementCost(), film.getReplacementCost())
-        ? film.getReplacementCost()
-        : requestDTO.getReplacementCost());
+    film.setReplacementCost(
+        Objects.equals(requestDTO.getReplacementCost(), film.getReplacementCost())
+            ? film.getReplacementCost()
+            : requestDTO.getReplacementCost());
     film.setRating(Objects.equals(requestDTO.getRating(), film.getRating())
         ? film.getRating()
         : requestDTO.getRating());
