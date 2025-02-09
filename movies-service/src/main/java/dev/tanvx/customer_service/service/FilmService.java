@@ -7,6 +7,7 @@ import dev.tanvx.customer_service.dto.request.film.FilmUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.film.FilmsRequestDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.film.FilmDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmsResponseDTO;
 import org.springframework.data.domain.Page;
@@ -32,5 +33,5 @@ public interface FilmService {
   FilmUpdateResponseDTO updateFilm(Integer filmId, FilmUpdateRequestDTO requestDTO)
       throws ServiceException;
 
-  void deleteFilm(Integer filmId) throws ServiceException;
+  FilmDeleteResponseDTO deleteFilm(Integer filmId) throws ServiceException;
 }

@@ -62,6 +62,9 @@ public class Film {
   @Column(name = "rating", nullable = false, length = 10)
   private String rating;
 
+  @Column(name = "delete_flg", nullable = false)
+  private boolean deleteFlg;
+
   @Column(name = "last_update", nullable = false)
   private ZonedDateTime lastUpdate;
 }

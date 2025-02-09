@@ -13,6 +13,7 @@ import dev.tanvx.customer_service.dto.request.film.FilmUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.film.FilmsRequestDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.film.FilmDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmsResponseDTO;
 import dev.tanvx.customer_service.entity.Film;
@@ -132,12 +133,13 @@ public class FilmUseCase {
   }
 
   @Transactional
-  public ApiResponse<Void> deleteFilm(Integer filmId) {
+  public ApiResponse<FilmDeleteResponseDTO> deleteFilm(Integer filmId) {
     try {
-      filmService.deleteFilm(filmId);
-      return ApiResponse.<Void>builder()
+      FilmDeleteResponseDTO filmDeleteResponseDTO = filmService.deleteFilm(filmId);
+      return ApiResponse.<FilmDeleteResponseDTO>builder()
           .status(ResponseConstants.SUCCESS_STATUS)
           .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(filmDeleteResponseDTO)
           .build();
     } catch (ServiceException e) {
       if (FilmService.FILM_NOT_FOUND.equals(e.getCauseId())) {

@@ -10,6 +10,7 @@ import dev.tanvx.customer_service.dto.response.city.CitiesResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityByCountryResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.city.CityDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityUpdateResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -30,5 +31,5 @@ public interface CityService {
     CityUpdateResponseDTO updateCity(Integer cityId, CityUpdateRequestDTO requestDTO)
         throws ServiceException;
 
-    void deleteCity(Integer cityId) throws ServiceException;
+    CityDeleteResponseDTO deleteCity(Integer cityId) throws ServiceException;
 }

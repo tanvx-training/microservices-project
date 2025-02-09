@@ -1,5 +1,6 @@
 package dev.tanvx.customer_service.repository;
 
+import dev.tanvx.customer_service.entity.Actor;
 import dev.tanvx.customer_service.entity.Film;
 import dev.tanvx.customer_service.entity.FilmActor;
 import dev.tanvx.customer_service.entity.id.FilmActorId;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface FilmActorRepository extends JpaRepository<FilmActor, FilmActorId> {
 
   List<FilmActor> findAllByIdFilm(Film film);
+
+  void deleteAllByIdActor(Actor actor);
 
   void deleteAllByIdFilm(Film film);
 }

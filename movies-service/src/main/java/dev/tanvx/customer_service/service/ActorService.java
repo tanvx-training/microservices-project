@@ -7,6 +7,7 @@ import dev.tanvx.customer_service.dto.request.actor.ActorUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.actor.ActorsRequestDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.actor.ActorDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorsResponseDTO;
 import org.springframework.data.domain.Page;
@@ -25,5 +26,5 @@ public interface ActorService {
 
   ActorUpdateResponseDTO updateActor(Integer actorId, ActorUpdateRequestDTO requestDTO) throws ServiceException;
 
-  void deleteActor(Integer actorId) throws ServiceException;
+  ActorDeleteResponseDTO deleteActor(Integer actorId) throws ServiceException;
 }

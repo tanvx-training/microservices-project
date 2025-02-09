@@ -1,5 +1,6 @@
 package dev.tanvx.customer_service.service.impl;
 
+import dev.tanvx.common_library.enums.DeleteStatus;
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.request.SearchRequest;
@@ -10,9 +11,11 @@ import dev.tanvx.customer_service.dto.request.language.LanguageUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.language.LanguagesRequestDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.language.LanguageDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguagesResponseDTO;
 import dev.tanvx.customer_service.entity.Language;
+import dev.tanvx.customer_service.repository.FilmRepository;
 import dev.tanvx.customer_service.repository.LanguageRepository;
 import dev.tanvx.customer_service.service.LanguageService;
 import java.time.ZonedDateTime;
@@ -21,12 +24,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class LanguageServiceImpl implements LanguageService {
 
   private final LanguageRepository languageRepository;
+
+  private final FilmRepository filmRepository;
 
   private final SearchSpecificationRequestUtils searchSpecificationRequestUtils;
 
@@ -95,10 +101,23 @@ public class LanguageServiceImpl implements LanguageService {
   }
 
   @Override
-  public void deleteLanguage(Integer languageId) throws ServiceException {
-    if (!languageRepository.existsById(languageId)) {
-      throw new ServiceException(LANGUAGE_NOT_FOUND);
-    }
-    languageRepository.deleteById(languageId);
+  @Transactional
+  public LanguageDeleteResponseDTO deleteLanguage(Integer languageId) throws ServiceException {
+    Language language = languageRepository.findById(languageId)
+        .orElseThrow(() -> new ServiceException(LANGUAGE_NOT_FOUND));
+
+    filmRepository.findAllByLanguageOrOriginalLanguage(language, language)
+        .forEach(film -> {
+          film.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+          filmRepository.save(film);
+        });
+
+    language.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+    language.setLastUpdate(ZonedDateTime.now());
+    languageRepository.save(language);
+    return LanguageDeleteResponseDTO.builder()
+        .languageId(languageId)
+        .deleteFlg(language.isDeleteFlg())
+        .build();
   }
 }

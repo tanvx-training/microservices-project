@@ -11,6 +11,7 @@ import dev.tanvx.customer_service.dto.response.address.AddressByCityResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressByCountryResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressesResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -105,7 +106,7 @@ public class AddressController {
   }
 
   @DeleteMapping("/{addressId}")
-  public ResponseEntity<ApiResponse<Void>> deleteAddress(
+  public ResponseEntity<ApiResponse<AddressDeleteResponseDTO>> deleteAddress(
       @PathVariable("addressId") Integer addressId) {
     return ResponseEntity.ok(addressUseCase.deleteAddress(addressId));
   }

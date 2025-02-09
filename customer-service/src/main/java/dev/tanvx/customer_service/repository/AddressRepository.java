@@ -3,6 +3,7 @@ package dev.tanvx.customer_service.repository;
 import dev.tanvx.customer_service.entity.Address;
 import dev.tanvx.customer_service.entity.City;
 import jakarta.persistence.LockModeType;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -16,5 +17,5 @@ public interface AddressRepository extends JpaRepository<Address, Integer>,
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<Address> findAddressByAddressId(Integer addressId);
 
-  void deleteAllByCity(City city);
+  List<Address> findAllByCity(City city);
 }

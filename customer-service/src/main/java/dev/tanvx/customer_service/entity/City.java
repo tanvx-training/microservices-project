@@ -32,6 +32,9 @@ public class City {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "delete_flg", nullable = false)
+    private boolean deleteFlg;
+
     @ManyToOne
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;

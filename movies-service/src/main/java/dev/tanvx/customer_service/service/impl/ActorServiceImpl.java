@@ -1,5 +1,6 @@
 package dev.tanvx.customer_service.service.impl;
 
+import dev.tanvx.common_library.enums.DeleteStatus;
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.request.SearchRequest;
@@ -10,10 +11,12 @@ import dev.tanvx.customer_service.dto.request.actor.ActorUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.actor.ActorsRequestDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.actor.ActorDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorsResponseDTO;
 import dev.tanvx.customer_service.entity.Actor;
 import dev.tanvx.customer_service.repository.ActorRepository;
+import dev.tanvx.customer_service.repository.FilmActorRepository;
 import dev.tanvx.customer_service.service.ActorService;
 import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,8 @@ import org.springframework.stereotype.Service;
 public class ActorServiceImpl implements ActorService {
 
   private final ActorRepository actorRepository;
+
+  private final FilmActorRepository filmActorRepository;
 
   private final SearchSpecificationRequestUtils searchSpecificationRequestUtils;
 
@@ -97,10 +102,16 @@ public class ActorServiceImpl implements ActorService {
   }
 
   @Override
-  public void deleteActor(Integer actorId) throws ServiceException {
-    if (!actorRepository.existsById(actorId)) {
-      throw new ServiceException(ACTOR_NOT_FOUND);
-    }
-    actorRepository.deleteById(actorId);
+  public ActorDeleteResponseDTO deleteActor(Integer actorId) throws ServiceException {
+    Actor actor = actorRepository.findActorByActorId(actorId)
+        .orElseThrow(() -> new ServiceException(ACTOR_NOT_FOUND));
+    filmActorRepository.deleteAllByIdActor(actor);
+    actor.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+    actor.setLastUpdate(ZonedDateTime.now()); // Set current time as last update timestamp
+    actorRepository.save(actor);
+    return ActorDeleteResponseDTO.builder()
+        .actorId(actor.getActorId())
+        .deleteFlg(actor.isDeleteFlg())
+        .build();
   }
 }

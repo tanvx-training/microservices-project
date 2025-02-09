@@ -1,5 +1,6 @@
 package dev.tanvx.customer_service.service.impl;
 
+import dev.tanvx.common_library.enums.DeleteStatus;
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.request.SearchRequest;
@@ -11,9 +12,11 @@ import dev.tanvx.customer_service.dto.request.category.CategoryUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoriesResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.category.CategoryDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryUpdateResponseDTO;
 import dev.tanvx.customer_service.entity.Category;
 import dev.tanvx.customer_service.repository.CategoryRepository;
+import dev.tanvx.customer_service.repository.FilmCategoryRepository;
 import dev.tanvx.customer_service.service.CategoryService;
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -27,6 +30,8 @@ import org.springframework.stereotype.Service;
 public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
+
+  private final FilmCategoryRepository filmCategoryRepository;
 
   private final SearchSpecificationRequestUtils searchSpecificationRequestUtils;
 
@@ -99,10 +104,17 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public void deleteCategory(Integer categoryId) throws ServiceException {
-    if (!categoryRepository.existsById(categoryId)) {
-      throw new ServiceException(CATEGORY_NOT_FOUND);
-    }
-    categoryRepository.deleteById(categoryId);
+  public CategoryDeleteResponseDTO deleteCategory(Integer categoryId) throws ServiceException {
+    Category category = categoryRepository.findCategoryByCategoryId(categoryId)
+        .orElseThrow(() -> new ServiceException(CATEGORY_NOT_FOUND));
+    filmCategoryRepository.deleteAllByIdCategory(category);
+
+    category.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+    category.setLastUpdate(ZonedDateTime.now());
+    categoryRepository.save(category);
+    return CategoryDeleteResponseDTO.builder()
+        .categoryId(category.getCategoryId())
+        .deleteFlg(category.isDeleteFlg())
+        .build();
   }
 }

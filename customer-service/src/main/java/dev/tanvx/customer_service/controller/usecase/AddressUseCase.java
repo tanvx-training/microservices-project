@@ -17,6 +17,7 @@ import dev.tanvx.customer_service.dto.response.address.AddressByCityResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressByCountryResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressesResponseDTO;
 import dev.tanvx.customer_service.entity.Address;
@@ -205,12 +206,13 @@ public class AddressUseCase {
   }
 
   @Transactional
-  public ApiResponse<Void> deleteAddress(Integer addressId) {
+  public ApiResponse<AddressDeleteResponseDTO> deleteAddress(Integer addressId) {
     try {
-      addressService.deleteAddress(addressId);
-      return ApiResponse.<Void>builder()
+      AddressDeleteResponseDTO addressDeleteResponseDTO =  addressService.deleteAddress(addressId);
+      return ApiResponse.<AddressDeleteResponseDTO>builder()
           .status(ResponseConstants.SUCCESS_STATUS)
           .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(addressDeleteResponseDTO)
           .build();
     } catch (ServiceException e) {
       if (AddressService.ADDRESS_NOT_FOUND.equals(e.getCauseId())) {

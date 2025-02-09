@@ -7,6 +7,7 @@ import dev.tanvx.customer_service.dto.request.language.LanguageUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.language.LanguagesRequestDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.language.LanguageDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguagesResponseDTO;
 import org.springframework.data.domain.Page;
@@ -28,5 +29,5 @@ public interface LanguageService {
   LanguageUpdateResponseDTO updateLanguage(Integer languageId, LanguageUpdateRequestDTO requestDTO)
       throws ServiceException;
 
-  void deleteLanguage(Integer languageId) throws ServiceException;
+  LanguageDeleteResponseDTO deleteLanguage(Integer languageId) throws ServiceException;
 }

@@ -1,5 +1,6 @@
 package dev.tanvx.customer_service.service.impl;
 
+import dev.tanvx.common_library.enums.DeleteStatus;
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.request.SearchRequest;
@@ -11,7 +12,9 @@ import dev.tanvx.customer_service.dto.request.country.CountryUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.response.country.CountriesResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.country.CountryDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryUpdateResponseDTO;
+import dev.tanvx.customer_service.entity.Address;
 import dev.tanvx.customer_service.entity.City;
 import dev.tanvx.customer_service.entity.Country;
 import dev.tanvx.customer_service.repository.AddressRepository;
@@ -107,17 +110,29 @@ public class CountryServiceImpl implements CountryService {
 
   @Override
   @Transactional
-  public void deleteCountry(Integer countryId) throws ServiceException {
+  public CountryDeleteResponseDTO deleteCountry(Integer countryId) throws ServiceException {
     // Check if country is existed
     Country country = countryRepository.findCountryByCountryId(countryId)
         .orElseThrow(() -> new ServiceException(COUNTRY_NOT_FOUND));
     // Get all cities of the country
     List<City> cities = cityRepository.findAllByCountry(country);
     // Delete address linked to city
-    cities.forEach(addressRepository::deleteAllByCity);
-    // Delete all cities of the country
-    cityRepository.deleteAllByCountry(country);
-    // Delete country
-    countryRepository.delete(country);
+    cities.forEach(city -> {
+      // Set delete flag for address
+      List<Address> addresses = addressRepository.findAllByCity(city);
+      addresses.forEach(address -> {
+        address.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+        addressRepository.save(address);
+      });
+      // Set delete flag for city
+      city.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+      cityRepository.save(city);
+    });
+    country.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+    countryRepository.save(country);
+    return CountryDeleteResponseDTO.builder()
+        .countryId(country.getCountryId())
+        .deleteFlg(country.isDeleteFlg())
+        .build();
   }
 }

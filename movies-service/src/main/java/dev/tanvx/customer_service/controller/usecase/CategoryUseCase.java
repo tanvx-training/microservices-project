@@ -14,6 +14,7 @@ import dev.tanvx.customer_service.dto.request.category.CategoryUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoriesResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.category.CategoryDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryUpdateResponseDTO;
 import dev.tanvx.customer_service.entity.Category;
 import dev.tanvx.customer_service.service.CategoryService;
@@ -129,12 +130,14 @@ public class CategoryUseCase {
   }
 
   @Transactional
-  public ApiResponse<Void> deleteCategory(Integer categoryId) {
+  public ApiResponse<CategoryDeleteResponseDTO> deleteCategory(Integer categoryId) {
     try {
-      categoryService.deleteCategory(categoryId);
-      return ApiResponse.<Void>builder()
+      CategoryDeleteResponseDTO categoryDeleteResponseDTO = categoryService.deleteCategory(
+          categoryId);
+      return ApiResponse.<CategoryDeleteResponseDTO>builder()
           .status(ResponseConstants.SUCCESS_STATUS)
           .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(categoryDeleteResponseDTO)
           .build();
     } catch (ServiceException e) {
       if (CategoryService.CATEGORY_NOT_FOUND.equals(e.getCauseId())) {

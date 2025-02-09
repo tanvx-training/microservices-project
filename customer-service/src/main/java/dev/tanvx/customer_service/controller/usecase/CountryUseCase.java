@@ -14,6 +14,7 @@ import dev.tanvx.customer_service.dto.request.country.CountryUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.response.country.CountriesResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.country.CountryDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryUpdateResponseDTO;
 import dev.tanvx.customer_service.entity.Country;
 import dev.tanvx.customer_service.service.CountryService;
@@ -125,12 +126,13 @@ public class CountryUseCase {
   }
 
   @Transactional
-  public ApiResponse<Void> deleteCountry(Integer countryId) {
+  public ApiResponse<CountryDeleteResponseDTO> deleteCountry(Integer countryId) {
     try {
-      countryService.deleteCountry(countryId);
-      return ApiResponse.<Void>builder()
+      CountryDeleteResponseDTO countryDeleteResponseDTO = countryService.deleteCountry(countryId);
+      return ApiResponse.<CountryDeleteResponseDTO>builder()
           .status(ResponseConstants.SUCCESS_STATUS)
           .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(countryDeleteResponseDTO)
           .build();
     } catch (ServiceException e) {
       if (CountryService.COUNTRY_NOT_FOUND.equals(e.getCauseId())) {

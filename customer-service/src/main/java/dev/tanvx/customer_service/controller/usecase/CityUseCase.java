@@ -16,6 +16,7 @@ import dev.tanvx.customer_service.dto.response.city.CitiesResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityByCountryResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.city.CityDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityUpdateResponseDTO;
 import dev.tanvx.customer_service.entity.City;
 import dev.tanvx.customer_service.service.CityService;
@@ -164,12 +165,13 @@ public class CityUseCase {
   }
 
   @Transactional
-  public ApiResponse<Void> deleteCity(Integer cityId) {
+  public ApiResponse<CityDeleteResponseDTO> deleteCity(Integer cityId) {
     try {
-      cityService.deleteCity(cityId);
-      return ApiResponse.<Void>builder()
+      CityDeleteResponseDTO cityDeleteResponseDTO =  cityService.deleteCity(cityId);
+      return ApiResponse.<CityDeleteResponseDTO>builder()
           .status(ResponseConstants.SUCCESS_STATUS)
           .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(cityDeleteResponseDTO)
           .build();
     } catch (ServiceException e) {
       if (CityService.CITY_NOT_FOUND.equals(e.getCauseId())) {

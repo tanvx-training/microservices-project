@@ -13,6 +13,7 @@ import dev.tanvx.customer_service.dto.request.actor.ActorUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.actor.ActorsRequestDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.actor.ActorDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorsResponseDTO;
 import dev.tanvx.customer_service.entity.Actor;
@@ -121,12 +122,13 @@ public class ActorUseCase {
   }
 
   @Transactional
-  public ApiResponse<Void> deleteActor(Integer actorId) {
+  public ApiResponse<ActorDeleteResponseDTO> deleteActor(Integer actorId) {
     try {
-      actorService.deleteActor(actorId);
-      return ApiResponse.<Void>builder()
+      ActorDeleteResponseDTO actorDeleteResponseDTO = actorService.deleteActor(actorId);
+      return ApiResponse.<ActorDeleteResponseDTO>builder()
           .status(ResponseConstants.SUCCESS_STATUS)
           .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(actorDeleteResponseDTO)
           .build();
     } catch (ServiceException e) {
       if (ActorService.ACTOR_NOT_FOUND.equals(e.getCauseId())) {

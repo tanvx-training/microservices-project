@@ -13,6 +13,7 @@ import dev.tanvx.customer_service.dto.request.language.LanguageUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.language.LanguagesRequestDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.language.LanguageDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguagesResponseDTO;
 import dev.tanvx.customer_service.entity.Language;
@@ -129,12 +130,13 @@ public class LanguageUseCase {
   }
 
   @Transactional
-  public ApiResponse<Void> deleteLanguage(Integer languageId) {
+  public ApiResponse<LanguageDeleteResponseDTO> deleteLanguage(Integer languageId) {
     try {
-      languageService.deleteLanguage(languageId);
-      return ApiResponse.<Void>builder()
+      LanguageDeleteResponseDTO languageDeleteResponseDTO = languageService.deleteLanguage(languageId);
+      return ApiResponse.<LanguageDeleteResponseDTO>builder()
           .status(ResponseConstants.SUCCESS_STATUS)
           .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(languageDeleteResponseDTO)
           .build();
     } catch (ServiceException e) {
       if (LanguageService.LANGUAGE_NOT_FOUND.equals(e.getCauseId())) {

@@ -8,6 +8,7 @@ import dev.tanvx.customer_service.dto.request.category.CategoryUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoriesResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.category.CategoryDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryUpdateResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -30,5 +31,5 @@ public interface CategoryService {
   CategoryUpdateResponseDTO updateCategory(Integer categoryId, CategoryUpdateRequestDTO requestDTO)
       throws ServiceException;
 
-  void deleteCategory(Integer categoryId) throws ServiceException;
+  CategoryDeleteResponseDTO deleteCategory(Integer categoryId) throws ServiceException;
 }

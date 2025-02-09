@@ -10,6 +10,7 @@ import dev.tanvx.customer_service.dto.response.city.CitiesResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityByCountryResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.city.CityDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityUpdateResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -84,7 +85,7 @@ public class CityController {
   }
 
   @DeleteMapping("/{cityId}/")
-  public ResponseEntity<ApiResponse<Void>> deleteCity(
+  public ResponseEntity<ApiResponse<CityDeleteResponseDTO>> deleteCity(
       @PathVariable("cityId") Integer cityId) {
     return ResponseEntity.ok(cityUseCase.deleteCity(cityId));
   }

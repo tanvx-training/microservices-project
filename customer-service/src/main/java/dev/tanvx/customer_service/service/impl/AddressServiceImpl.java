@@ -1,5 +1,6 @@
 package dev.tanvx.customer_service.service.impl;
 
+import dev.tanvx.common_library.enums.DeleteStatus;
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.enums.FieldType;
@@ -17,6 +18,7 @@ import dev.tanvx.customer_service.dto.response.address.AddressByCityResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressByCountryResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressesResponseDTO;
 import dev.tanvx.customer_service.entity.Address;
@@ -210,10 +212,14 @@ public class AddressServiceImpl implements AddressService {
   }
 
   @Override
-  public void deleteAddress(Integer addressId) throws ServiceException {
-    if (!addressRepository.existsById(addressId)) {
-      throw new ServiceException(ADDRESS_NOT_FOUND);
-    }
-    addressRepository.deleteById(addressId);
+  public AddressDeleteResponseDTO deleteAddress(Integer addressId) throws ServiceException {
+    Address address = addressRepository.findAddressByAddressId(addressId)
+        .orElseThrow(() -> new ServiceException(ADDRESS_NOT_FOUND));
+    address.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+    addressRepository.save(address);
+    return AddressDeleteResponseDTO.builder()
+        .addressId(address.getAddressId())
+        .deleteFlg(address.isDeleteFlg())
+        .build();
   }
 }

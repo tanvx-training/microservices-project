@@ -8,6 +8,7 @@ import dev.tanvx.customer_service.dto.request.country.CountryUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.response.country.CountriesResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.country.CountryDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryUpdateResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -29,5 +30,5 @@ public interface CountryService {
     CountryUpdateResponseDTO updateCountry(Integer countryId, CountryUpdateRequestDTO requestDTO)
         throws ServiceException;
 
-    void deleteCountry(Integer countryId) throws ServiceException;
+    CountryDeleteResponseDTO deleteCountry(Integer countryId) throws ServiceException;
 }

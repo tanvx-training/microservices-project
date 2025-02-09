@@ -1,5 +1,6 @@
 package dev.tanvx.customer_service.service.impl;
 
+import dev.tanvx.common_library.enums.DeleteStatus;
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.request.SearchRequest;
@@ -10,6 +11,7 @@ import dev.tanvx.customer_service.dto.request.film.FilmUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.film.FilmsRequestDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.film.FilmDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.film.FilmsResponseDTO;
 import dev.tanvx.customer_service.entity.Actor;
@@ -334,7 +336,7 @@ public class FilmServiceImpl implements FilmService {
 
   @Override
   @Transactional
-  public void deleteFilm(Integer filmId) throws ServiceException {
+  public FilmDeleteResponseDTO deleteFilm(Integer filmId) throws ServiceException {
     // Check if film exists
     Film film = filmRepository.findById(filmId)
         .orElseThrow(() -> new ServiceException(FILM_NOT_FOUND));
@@ -343,7 +345,13 @@ public class FilmServiceImpl implements FilmService {
     // Delete film categories
     filmCategoryRepository.deleteAllByIdFilm(film);
     // Delete film
-    filmRepository.delete(film);
+    film.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+    film.setLastUpdate(ZonedDateTime.now());
+    filmRepository.save(film);
+    return FilmDeleteResponseDTO.builder()
+        .filmId(film.getFilmId())
+        .deleteFlg(film.isDeleteFlg())
+        .build();
   }
 
   private boolean isListChanged(List<Integer> oldList, List<Integer> newList) {

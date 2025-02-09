@@ -8,6 +8,7 @@ import dev.tanvx.customer_service.dto.request.country.CountryUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.response.country.CountriesResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.country.CountryDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.country.CountryUpdateResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -64,7 +65,7 @@ public class CountryController {
   }
 
   @DeleteMapping("/{countryId}/")
-  public ResponseEntity<ApiResponse<Void>> deleteCountry(
+  public ResponseEntity<ApiResponse<CountryDeleteResponseDTO>> deleteCountry(
       @PathVariable("countryId") Integer countryId) {
     return ResponseEntity.ok(countryUseCase.deleteCountry(countryId));
   }

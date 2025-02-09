@@ -19,5 +19,4 @@ public interface CityRepository extends JpaRepository<City, Integer>,
 
   List<City> findAllByCountry(Country country);
 
-  void deleteAllByCountry(Country country);
 }

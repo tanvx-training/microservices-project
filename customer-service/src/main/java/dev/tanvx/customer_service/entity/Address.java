@@ -48,6 +48,9 @@ public class Address {
     @Column(name = "phone", nullable = false)
     private String phone;
 
+    @Column(name = "delete_flg", nullable = false)
+    private boolean deleteFlg;
+
     @Column(name = "last_update", nullable = false)
     private OffsetDateTime lastUpdate;
 }

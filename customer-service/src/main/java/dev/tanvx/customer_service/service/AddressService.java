@@ -11,6 +11,7 @@ import dev.tanvx.customer_service.dto.response.address.AddressByCityResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressByCountryResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.address.AddressDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.address.AddressesResponseDTO;
 import org.springframework.data.domain.Page;
@@ -32,5 +33,5 @@ public interface AddressService {
     AddressUpdateResponseDTO updateAddress(Integer addressId, AddressUpdateRequestDTO requestDTO)
         throws ServiceException;
 
-    void deleteAddress(Integer addressId) throws ServiceException;
+    AddressDeleteResponseDTO deleteAddress(Integer addressId) throws ServiceException;
 }

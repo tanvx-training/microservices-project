@@ -36,6 +36,9 @@ public class Store {
   @Column(name = "address_id", nullable = false)
   private Integer addressId;
 
+  @Column(name = "delete_flg", nullable = false)
+  private boolean deleteFlg;
+
   @Column(name = "last_update", nullable = false)
   private ZonedDateTime lastUpdate;
 }

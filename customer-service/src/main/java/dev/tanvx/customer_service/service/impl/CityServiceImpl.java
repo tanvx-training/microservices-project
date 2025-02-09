@@ -2,6 +2,7 @@ package dev.tanvx.customer_service.service.impl;
 
 import static dev.tanvx.customer_service.service.CountryService.COUNTRY_NOT_FOUND;
 
+import dev.tanvx.common_library.enums.DeleteStatus;
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.enums.FieldType;
@@ -19,6 +20,7 @@ import dev.tanvx.customer_service.dto.response.city.CitiesResponseDTO.CountryDTO
 import dev.tanvx.customer_service.dto.response.city.CityByCountryResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.city.CityDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.city.CityUpdateResponseDTO;
 import dev.tanvx.customer_service.entity.City;
 import dev.tanvx.customer_service.repository.AddressRepository;
@@ -153,13 +155,21 @@ public class CityServiceImpl implements CityService {
   }
 
   @Override
-  public void deleteCity(Integer cityId) throws ServiceException {
+  public CityDeleteResponseDTO deleteCity(Integer cityId) throws ServiceException {
     // Check if city exists
     City city = cityRepository.findById(cityId)
         .orElseThrow(() -> new ServiceException(CITY_NOT_FOUND));
-    // Delete address linked to city
-    addressRepository.deleteAllByCity(city);
-    // Delete city
-    cityRepository.delete(city);
+    // Set delete flag to inactive for all addresses in the city
+    addressRepository.findAllByCity(city).forEach(address -> {
+      address.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+      addressRepository.save(address);
+    });
+    // Set delete flag to inactive for the city
+    city.setDeleteFlg(DeleteStatus.INACTIVE.isValue());
+    cityRepository.save(city);
+    return CityDeleteResponseDTO.builder()
+        .cityId(city.getCityId())
+        .deleteFlg(city.isDeleteFlg())
+        .build();
   }
 }

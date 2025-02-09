@@ -8,6 +8,7 @@ import dev.tanvx.customer_service.dto.request.category.CategoryUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoriesResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.category.CategoryDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.category.CategoryUpdateResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -67,7 +68,7 @@ public class CategoryController {
   }
 
   @DeleteMapping("/{categoryId}/")
-  public ResponseEntity<ApiResponse<Void>> deleteCategory(
+  public ResponseEntity<ApiResponse<CategoryDeleteResponseDTO>> deleteCategory(
       @PathVariable("categoryId") Integer categoryId) {
 
     return ResponseEntity.ok(categoryUseCase.deleteCategory(categoryId));

@@ -29,6 +29,9 @@ public class Language {
   @Column(nullable = false, length = 20)
   private String name;
 
+  @Column(name = "delete_flg", nullable = false)
+  private boolean deleteFlg;
+
   @Column(name = "last_update", nullable = false)
   private ZonedDateTime lastUpdate;
 }

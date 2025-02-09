@@ -7,6 +7,7 @@ import dev.tanvx.customer_service.dto.request.actor.ActorUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.actor.ActorsRequestDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.actor.ActorDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.actor.ActorsResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +65,7 @@ public class ActorController {
   }
 
   @DeleteMapping("/{actorId}/")
-  public ResponseEntity<ApiResponse<Void>> deleteActor(
+  public ResponseEntity<ApiResponse<ActorDeleteResponseDTO>> deleteActor(
       @PathVariable("actorId") Integer actorId) {
     return ResponseEntity.ok(actorUseCase.deleteActor(actorId));
   }

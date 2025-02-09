@@ -7,6 +7,7 @@ import dev.tanvx.customer_service.dto.request.language.LanguageUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.language.LanguagesRequestDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.language.LanguageDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguageUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.language.LanguagesResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +65,7 @@ public class LanguageController {
   }
 
   @DeleteMapping("/{languageId}/")
-  public ResponseEntity<ApiResponse<Void>> deleteLanguage(
+  public ResponseEntity<ApiResponse<LanguageDeleteResponseDTO>> deleteLanguage(
       @PathVariable("languageId") Integer languageId) {
     return ResponseEntity.ok(languageUseCase.deleteLanguage(languageId));
   }
