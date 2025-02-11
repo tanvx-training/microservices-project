@@ -1,0 +1,17 @@
+package dev.tanvx.business_service.client.address;
+
+import dev.tanvx.business_service.config.FeignClientConfiguration;
+import dev.tanvx.common_library.model.ApiResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@FeignClient(name = "api-gateway", url = "http://localhost:8888", configuration = {
+    FeignClientConfiguration.class})
+public interface AddressServiceClient {
+
+  @GetMapping("/address/{addressId}/")
+  ResponseEntity<ApiResponse<AddressByIdResponseDTO>> getAddressById(
+      @PathVariable("addressId") Integer addressId);
+}
