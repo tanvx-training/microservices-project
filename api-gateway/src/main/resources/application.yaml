@@ -13,15 +13,15 @@ spring:
         - id: movies-service
           uri: lb://movies-service
           predicates:
-            - Path=/api/v1/addresses/**
+            - Path=/api/v1/categories/**, /api/v1/actors/**, /api/v1/language/**, /api/v1/films/**, /api/v1/inventories/**
         - id: customer-service
           uri: lb://customer-service
           predicates:
-            - Path=/api/v1/addresses/**
+            - Path=/api/v1/addresses/**, /api/v1/cities/**, /api/v1/countries/**, /api/v1/customers/**
         - id: business-service
           uri: lb://business-service
           predicates:
-            - Path=/api/v1/addresses/**
+            - Path=/api/v1/stores/**, /api/v1/staffs/**, /api/v1/rentals/**, /api/v1/payments/**
 
 management:
   endpoints:

@@ -11,7 +11,9 @@ import dev.tanvx.customer_service.dto.response.customer.CustomerUpdateResponseDT
 import dev.tanvx.customer_service.dto.response.customer.CustomersByAddressResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomersResponseDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CustomerUseCase {
 
   public ApiResponse<Page<CustomersResponseDTO>> getCustomers(CustomersRequestDTO build) {

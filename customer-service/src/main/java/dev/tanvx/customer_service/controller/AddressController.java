@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/addresses")
+@RequestMapping("/api/v1/addresses/")
 public class AddressController {
 
   private final AddressUseCase addressUseCase;
@@ -56,7 +56,7 @@ public class AddressController {
     return ResponseEntity.ok(addressUseCase.getAddressById(addressId));
   }
 
-  @GetMapping("/{countryId}/countries")
+  @GetMapping("/{countryId}/countries/")
   public ResponseEntity<ApiResponse<Page<AddressByCountryResponseDTO>>> getAddressesByCountry(
       @PathVariable("countryId") Integer countryId,
       @RequestParam(value = "page", required = false) Integer page,
@@ -73,7 +73,7 @@ public class AddressController {
     ));
   }
 
-  @GetMapping("/{cityId}/cities")
+  @GetMapping("/{cityId}/cities/")
   public ResponseEntity<ApiResponse<Page<AddressByCityResponseDTO>>> getAddressesByCity(
       @PathVariable("cityId") Integer cityId,
       @RequestParam(value = "page", required = false) Integer page,
@@ -98,14 +98,14 @@ public class AddressController {
         .body(addressUseCase.createAddress(requestDTO));
   }
 
-  @PutMapping("/{addressId}")
+  @PutMapping("/{addressId}/")
   public ResponseEntity<ApiResponse<AddressUpdateResponseDTO>> updateAddress(
       @PathVariable("addressId") Integer addressId,
       @RequestBody AddressUpdateRequestDTO requestDTO) {
     return ResponseEntity.ok(addressUseCase.updateAddress(addressId, requestDTO));
   }
 
-  @DeleteMapping("/{addressId}")
+  @DeleteMapping("/{addressId}/")
   public ResponseEntity<ApiResponse<AddressDeleteResponseDTO>> deleteAddress(
       @PathVariable("addressId") Integer addressId) {
     return ResponseEntity.ok(addressUseCase.deleteAddress(addressId));
