@@ -42,6 +42,8 @@ management:
     sampling:
       probability: 1.0
 
+connect
+
 eureka:
   instance:
     prefer-ip-address: true
