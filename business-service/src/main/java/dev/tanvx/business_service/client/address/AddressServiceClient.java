@@ -7,8 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "api-gateway", url = "http://localhost:8888", configuration = {
-    FeignClientConfiguration.class})
+@FeignClient(name = "api-gateway", url = "http://localhost:8888",
+    configuration = {FeignClientConfiguration.class}
+)
 public interface AddressServiceClient {
 
   @GetMapping("/api/v1/addresses/{addressId}/")
