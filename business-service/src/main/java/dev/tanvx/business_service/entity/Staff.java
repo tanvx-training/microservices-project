@@ -57,8 +57,4 @@ public class Staff {
 
   @Column(name = "last_update", nullable = false)
   private ZonedDateTime lastUpdate;
-
-  @Lob
-  @Column(name = "picture")
-  private byte[] picture;
 }

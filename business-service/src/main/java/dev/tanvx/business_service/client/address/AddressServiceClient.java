@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
     FeignClientConfiguration.class})
 public interface AddressServiceClient {
 
-  @GetMapping("/address/{addressId}/")
+  @GetMapping("/api/v1/addresses/{addressId}/")
   ResponseEntity<ApiResponse<AddressByIdResponseDTO>> getAddressById(
       @PathVariable("addressId") Integer addressId);
 }
