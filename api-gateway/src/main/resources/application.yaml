@@ -9,6 +9,7 @@ spring:
       discovery:
         locator:
           lower-case-service-id: true
+          enabled: false
       routes:
         - id: movies-service
           uri: lb://movies-service

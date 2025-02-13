@@ -1,5 +1,6 @@
 package dev.tanvx.business_service.controller.usecase;
 
+import dev.tanvx.business_service.dto.request.store.StoreByIdRequestDTO;
 import dev.tanvx.business_service.dto.request.store.StoreCreateRequestDTO;
 import dev.tanvx.business_service.dto.request.store.StoreUpdateRequestDTO;
 import dev.tanvx.business_service.dto.request.store.StoresRequestDTO;
@@ -9,8 +10,10 @@ import dev.tanvx.business_service.dto.response.store.StoreDeleteResponseDTO;
 import dev.tanvx.business_service.dto.response.store.StoreUpdateResponseDTO;
 import dev.tanvx.business_service.dto.response.store.StoresResponseDTO;
 import dev.tanvx.business_service.entity.Store;
+import dev.tanvx.business_service.service.StaffService;
 import dev.tanvx.business_service.service.StoreService;
 import dev.tanvx.common_library.exception.BusinessException;
+import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.model.ApiResponse;
 import dev.tanvx.common_library.model.MessageProperties;
 import dev.tanvx.common_library.model.ResponseConstants;
@@ -55,19 +58,93 @@ public class StoreUseCase {
     }
   }
 
+  @Transactional(readOnly = true)
   public ApiResponse<StoreByIdResponseDTO> getStoreById(Integer storeId) {
-    return null;
+    try {
+      StoreByIdRequestDTO requestDTO = StoreByIdRequestDTO.builder()
+          .storeId(storeId)
+          .build();
+      StoreByIdResponseDTO storeByIdResponseDTO = storeService.getStoreById(requestDTO);
+      return ApiResponse.<StoreByIdResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(storeByIdResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (StoreService.STORE_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 
+  @Transactional
   public ApiResponse<StoreCreateResponseDTO> createStore(StoreCreateRequestDTO requestDTO) {
-    return null;
+    try {
+      // Validate request
+      validationUtils.validateRequest(requestDTO);
+
+      StoreCreateResponseDTO storeCreateResponseDTO = storeService.createStore(requestDTO);
+
+      return ApiResponse.<StoreCreateResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(storeCreateResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (StaffService.STAFF_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.BAD_REQUEST,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 
-  public ApiResponse<StoreUpdateResponseDTO> updateStore(Integer storeId, StoreUpdateRequestDTO requestDTO) {
-    return null;
+  @Transactional
+  public ApiResponse<StoreUpdateResponseDTO> updateStore(Integer storeId,
+      StoreUpdateRequestDTO requestDTO) {
+    try {
+      // Validate request
+      validationUtils.validateRequest(requestDTO);
+
+      StoreUpdateResponseDTO storeUpdateResponseDTO = storeService.updateStore(storeId,
+          requestDTO);
+
+      return ApiResponse.<StoreUpdateResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(storeUpdateResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (StoreService.STORE_NOT_FOUND.equals(e.getCauseId())
+          || StaffService.STAFF_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 
+  @Transactional
   public ApiResponse<StoreDeleteResponseDTO> deleteStore(Integer storeId) {
-    return null;
+    try {
+      StoreDeleteResponseDTO storeDeleteResponseDTO = storeService.deleteStore(storeId);
+      return ApiResponse.<StoreDeleteResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(storeDeleteResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (StoreService.STORE_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 }

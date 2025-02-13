@@ -1,5 +1,10 @@
 package dev.tanvx.business_service.repository;
 
-public interface StaffRepository {
+import dev.tanvx.business_service.entity.Staff;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface StaffRepository extends JpaRepository<Staff, Integer> {
 
 }

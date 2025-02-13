@@ -12,8 +12,8 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class StoreByIdResponseDTO {
   private Integer storeId;
-  private StoresResponseDTO.StaffDTO manager;
-  private StoresResponseDTO.AddressDTO address;
+  private StaffDTO manager;
+  private AddressDTO address;
 
   @Getter
   @Builder
@@ -23,7 +23,7 @@ public class StoreByIdResponseDTO {
     private Integer staffId;
     private String firstName;
     private String lastName;
-    private StoresResponseDTO.AddressDTO address;
+    private AddressDTO address;
     private String email;
   }
 
@@ -38,8 +38,8 @@ public class StoreByIdResponseDTO {
     private String district;
     private String postalCode;
     private String phone;
-    private StoresResponseDTO.CountryDTO country;
-    private StoresResponseDTO.CityDTO city;
+    private CountryDTO country;
+    private CityDTO city;
   }
 
   @Getter

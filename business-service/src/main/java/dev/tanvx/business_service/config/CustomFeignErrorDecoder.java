@@ -1,43 +1,48 @@
 package dev.tanvx.business_service.config;
 
+import static feign.FeignException.errorStatus;
+
 import dev.tanvx.common_library.exception.BusinessException;
-import dev.tanvx.common_library.model.MessageProperties;
-import dev.tanvx.common_library.util.MessageUtils;
+import dev.tanvx.common_library.exception.ValidationException;
 import feign.Response;
-import feign.Util;
 import feign.codec.ErrorDecoder;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomFeignErrorDecoder implements ErrorDecoder {
 
-  private final MessageUtils messageUtils;
-
-  private final ErrorDecoder defaultErrorDecoder = new Default();
-
   @Override
   public Exception decode(String methodKey, Response response) {
-    HttpStatus status = HttpStatus.valueOf(response.status());
-    String message = messageUtils.getMessage(MessageProperties.RESPONSE_500, null);
-    try {
-      if (Objects.nonNull(response.body())) {
-        message = Util.toString(response.body().asReader(StandardCharsets.UTF_8));
+    if (response.status() == 400) {
+      try {
+        String error = IOUtils.toString(response.body().asReader());
+        return new ValidationException(List.of(error));
+      } catch (IOException e) {
+        log.error(e.getMessage(), e);
       }
-    } catch (IOException e) {
-      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    } else if (response.status() == 404) {
+      try {
+        return new BusinessException(HttpStatus.NOT_FOUND,
+            IOUtils.toString(response.body().asReader()));
+      } catch (IOException e) {
+        log.error(e.getMessage(), e);
+      }
+    } else if (response.status() == 500) {
+      try {
+        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+            IOUtils.toString(response.body().asReader()));
+      } catch (IOException e) {
+        log.error(e.getMessage(), e);
+      }
     }
-    return switch (status) {
-      case NOT_FOUND -> // 404
-          new BusinessException(HttpStatus.NOT_FOUND, message);
-      case INTERNAL_SERVER_ERROR -> // 500
-          new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, message);
-      default -> defaultErrorDecoder.decode(methodKey, response);
-    };
+    return errorStatus(methodKey, response);
   }
 }
