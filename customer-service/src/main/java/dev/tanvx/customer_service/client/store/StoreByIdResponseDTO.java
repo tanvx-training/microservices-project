@@ -1,4 +1,4 @@
-package dev.tanvx.customer_service.dto.response.customer;
+package dev.tanvx.customer_service.client.store;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -10,26 +10,10 @@ import lombok.ToString;
 @Builder
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class CustomersResponseDTO {
-
-  private Integer customerId;
-  private StoreDTO store;
-  private String firstName;
-  private String lastName;
-  private String email;
+public class StoreByIdResponseDTO {
+  private Integer storeId;
+  private StaffDTO manager;
   private AddressDTO address;
-  private boolean isActive;
-  private int statusCode;
-
-  @Getter
-  @Builder
-  @ToString
-  @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-  public static class StoreDTO {
-    private Integer storeId;
-    private StaffDTO manager;
-    private AddressDTO address;
-  }
 
   @Getter
   @Builder

@@ -1,4 +1,4 @@
-package dev.tanvx.business_service.config;
+package dev.tanvx.customer_service.config;
 
 import static feign.FeignException.errorStatus;
 

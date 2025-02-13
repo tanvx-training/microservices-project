@@ -7,6 +7,7 @@ import dev.tanvx.customer_service.dto.request.customer.CustomerUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomersByAddressRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomersRequestDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerCreateResponseDTO;
+import dev.tanvx.customer_service.dto.response.customer.CustomerDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomersByAddressResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerByIdResponseDTO;
@@ -83,7 +84,7 @@ public class CustomerController {
   }
 
   @DeleteMapping("/{customerId}")
-  public ResponseEntity<ApiResponse<Void>> deleteCustomer(
+  public ResponseEntity<ApiResponse<CustomerDeleteResponseDTO>> deleteCustomer(
       @PathVariable("customerId") Integer customerId) {
     return ResponseEntity.ok(customerUseCase.deleteCustomer(customerId));
   }
