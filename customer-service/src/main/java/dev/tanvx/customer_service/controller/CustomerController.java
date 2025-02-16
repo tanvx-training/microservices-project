@@ -10,7 +10,6 @@ import dev.tanvx.customer_service.dto.response.customer.CustomerCreateResponseDT
 import dev.tanvx.customer_service.dto.response.customer.CustomerDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomersByAddressResponseDTO;
-import dev.tanvx.customer_service.dto.response.customer.CustomerByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomersResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,7 +47,7 @@ public class CustomerController {
   }
 
   @GetMapping("/{customerId}/")
-  public ResponseEntity<ApiResponse<CustomerByIdResponseDTO>> getCustomerById(
+  public ResponseEntity<ApiResponse<CustomersResponseDTO>> getCustomerById(
       @PathVariable("customerId") Integer customerId) {
     return ResponseEntity.ok(customerUseCase.getCustomerById(customerId));
   }

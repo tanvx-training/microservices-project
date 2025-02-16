@@ -1,5 +1,8 @@
 package dev.tanvx.customer_service.service.impl;
 
+import dev.tanvx.common_library.enums.CustomerStatus;
+import dev.tanvx.common_library.enums.DeleteStatus;
+import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.request.SearchRequest;
 import dev.tanvx.common_library.util.SearchSpecificationRequestUtils;
@@ -9,7 +12,6 @@ import dev.tanvx.customer_service.dto.request.customer.CustomerByIdRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomerCreateRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomerUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomersRequestDTO;
-import dev.tanvx.customer_service.dto.response.customer.CustomerByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerCreateResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerUpdateResponseDTO;
@@ -17,6 +19,7 @@ import dev.tanvx.customer_service.dto.response.customer.CustomersResponseDTO;
 import dev.tanvx.customer_service.entity.Customer;
 import dev.tanvx.customer_service.repository.CustomerRepository;
 import dev.tanvx.customer_service.service.CustomerService;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,12 +46,15 @@ public class CustomerServiceImpl implements CustomerService {
     SearchSpecification<Customer> specification = new SearchSpecification<>(searchRequest);
     Pageable pageable = SearchSpecification.getPageable(requestDTO.getPage(), requestDTO.getSize());
     return customerRepository.findAll(specification, pageable)
-        .map(this::fromEntity);
+        .map(this::customersResponseDTOFromEntity);
   }
 
   @Override
-  public CustomerByIdResponseDTO getCustomerById(CustomerByIdRequestDTO requestDTO) {
-    return null;
+  public CustomersResponseDTO getCustomerById(CustomerByIdRequestDTO requestDTO)
+      throws ServiceException {
+    return customerRepository.findById(requestDTO.getCustomerId())
+        .map(this::customersResponseDTOFromEntity)
+        .orElseThrow(() -> new ServiceException(CUSTOMER_NOT_FOUND));
   }
 
   @Override
@@ -63,11 +69,21 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerDeleteResponseDTO deleteCustomer(Integer customerId) {
-    return null;
+  public CustomerDeleteResponseDTO deleteCustomer(Integer customerId) throws ServiceException {
+    Customer customer = customerRepository.findById(customerId)
+        .orElseThrow(() -> new ServiceException(CUSTOMER_NOT_FOUND));
+    customer.setActiveBool(DeleteStatus.INACTIVE.isValue());
+    customer.setActiveInt(CustomerStatus.INACTIVE.getValue());
+    customer.setLastUpdate(ZonedDateTime.now());
+    customerRepository.save(customer);
+    return CustomerDeleteResponseDTO.builder()
+        .customerId(customer.getCustomerId())
+        .isActive(customer.getActiveBool())
+        .customerStatus(customer.getActiveInt())
+        .build();
   }
 
-  private CustomersResponseDTO fromEntity(Customer customer) {
+  private CustomersResponseDTO customersResponseDTOFromEntity(Customer customer) {
     CustomersResponseDTO.CustomersResponseDTOBuilder builder = CustomersResponseDTO.builder();
     builder.customerId(customer.getCustomerId());
     builder.firstName(customer.getFirstName());

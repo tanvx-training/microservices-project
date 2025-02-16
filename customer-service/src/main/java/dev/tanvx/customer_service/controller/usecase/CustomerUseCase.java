@@ -1,23 +1,22 @@
 package dev.tanvx.customer_service.controller.usecase;
 
 import dev.tanvx.common_library.exception.BusinessException;
+import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.model.ApiResponse;
 import dev.tanvx.common_library.model.MessageProperties;
 import dev.tanvx.common_library.model.ResponseConstants;
 import dev.tanvx.common_library.util.MessageUtils;
 import dev.tanvx.common_library.util.ValidationUtils;
+import dev.tanvx.customer_service.dto.request.customer.CustomerByIdRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomerCreateRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomerUpdateRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomersByAddressRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomersRequestDTO;
-import dev.tanvx.customer_service.dto.response.country.CountriesResponseDTO;
-import dev.tanvx.customer_service.dto.response.customer.CustomerByIdResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerCreateResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomersByAddressResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomersResponseDTO;
-import dev.tanvx.customer_service.entity.Country;
 import dev.tanvx.customer_service.entity.Customer;
 import dev.tanvx.customer_service.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -58,8 +57,26 @@ public class CustomerUseCase {
     }
   }
 
-  public ApiResponse<CustomerByIdResponseDTO> getCustomerById(Integer customerId) {
-    return null;
+  @Transactional(readOnly = true)
+  public ApiResponse<CustomersResponseDTO> getCustomerById(Integer customerId) {
+    try {
+      CustomerByIdRequestDTO requestDTO = CustomerByIdRequestDTO.builder()
+          .customerId(customerId)
+          .build();
+      CustomersResponseDTO customersResponseDTO = customerService.getCustomerById(requestDTO);
+      return ApiResponse.<CustomersResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(customersResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (CustomerService.CUSTOMER_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 
   public ApiResponse<Page<CustomersByAddressResponseDTO>> getCustomersByAddress(
@@ -77,7 +94,23 @@ public class CustomerUseCase {
     return null;
   }
 
+  @Transactional
   public ApiResponse<CustomerDeleteResponseDTO> deleteCustomer(Integer customerId) {
-    return null;
+    try {
+      CustomerDeleteResponseDTO customerDeleteResponseDTO = customerService.deleteCustomer(
+          customerId);
+      return ApiResponse.<CustomerDeleteResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(customerDeleteResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (CustomerService.CUSTOMER_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 }
