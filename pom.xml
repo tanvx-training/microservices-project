@@ -100,6 +100,7 @@
     <module>business-service</module>
     <module>movies-service</module>
     <module>customer-service</module>
+    <module>notification-service</module>
     <module>common-library</module>
     <module>eureka-server</module>
   </modules>
