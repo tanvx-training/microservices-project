@@ -18,6 +18,7 @@ import dev.tanvx.customer_service.dto.response.customer.CustomerUpdateResponseDT
 import dev.tanvx.customer_service.dto.response.customer.CustomersByAddressResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomersResponseDTO;
 import dev.tanvx.customer_service.entity.Customer;
+import dev.tanvx.customer_service.service.AddressService;
 import dev.tanvx.customer_service.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -84,14 +85,56 @@ public class CustomerUseCase {
     return null;
   }
 
+  @Transactional
   public ApiResponse<CustomerCreateResponseDTO> createCustomer(
-      CustomerCreateRequestDTO responseDTO) {
-    return null;
+      CustomerCreateRequestDTO requestDTO) {
+    try {
+      // Validate request
+      validationUtils.validateRequest(requestDTO);
+
+      CustomerCreateResponseDTO customerCreateResponseDTO = customerService.createCustomer(
+          requestDTO);
+
+      return ApiResponse.<CustomerCreateResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(customerCreateResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (AddressService.ADDRESS_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.BAD_REQUEST,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 
+  @Transactional
   public ApiResponse<CustomerUpdateResponseDTO> updateCustomer(Integer customerId,
-      CustomerUpdateRequestDTO responseDTO) {
-    return null;
+      CustomerUpdateRequestDTO requestDTO) {
+    try {
+      // Validate request
+      validationUtils.validateRequest(requestDTO);
+
+      CustomerUpdateResponseDTO customerUpdateResponseDTO = customerService.updateCustomer(
+          customerId,
+          requestDTO);
+
+      return ApiResponse.<CustomerUpdateResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(customerUpdateResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (CustomerService.CUSTOMER_NOT_FOUND.equals(e.getCauseId())
+          || AddressService.ADDRESS_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 
   @Transactional

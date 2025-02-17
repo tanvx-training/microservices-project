@@ -16,9 +16,13 @@ import dev.tanvx.customer_service.dto.response.customer.CustomerCreateResponseDT
 import dev.tanvx.customer_service.dto.response.customer.CustomerDeleteResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomerUpdateResponseDTO;
 import dev.tanvx.customer_service.dto.response.customer.CustomersResponseDTO;
+import dev.tanvx.customer_service.entity.Address;
 import dev.tanvx.customer_service.entity.Customer;
+import dev.tanvx.customer_service.repository.AddressRepository;
 import dev.tanvx.customer_service.repository.CustomerRepository;
+import dev.tanvx.customer_service.service.AddressService;
 import dev.tanvx.customer_service.service.CustomerService;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +37,8 @@ public class CustomerServiceImpl implements CustomerService {
   private final CustomerRepository customerRepository;
 
   private final StoreServiceClient storeServiceClient;
+
+  private final AddressRepository addressRepository;
 
   private final SearchSpecificationRequestUtils searchSpecificationRequestUtils;
 
@@ -58,14 +64,72 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerCreateResponseDTO createCustomer(CustomerCreateRequestDTO requestDTO) {
-    return null;
+  public CustomerCreateResponseDTO createCustomer(CustomerCreateRequestDTO requestDTO)
+      throws ServiceException {
+    Address address = addressRepository.findById(requestDTO.getAddressId())
+        .orElseThrow(() -> new ServiceException(AddressService.ADDRESS_NOT_FOUND));
+    StoreByIdResponseDTO storeByIdResponseDTO = storeServiceClient.getStoreById(
+            requestDTO.getStoreId())
+        .getBody()
+        .getData();
+    Customer customer = Customer.builder()
+        .storeId(storeByIdResponseDTO.getStoreId())
+        .firstName(requestDTO.getFirstName())
+        .lastName(requestDTO.getLastName())
+        .email(requestDTO.getEmail())
+        .address(address)
+        .activeBool(DeleteStatus.ACTIVE.isValue())
+        .createDate(LocalDate.now())
+        .lastUpdate(ZonedDateTime.now())
+        .activeInt(CustomerStatus.ACTIVE.getValue())
+        .build();
+    customerRepository.save(customer);
+    return CustomerCreateResponseDTO.builder()
+        .customerId(customer.getCustomerId())
+        .isActive(customer.getActiveBool())
+        .customerStatus(customer.getActiveInt())
+        .createDate(customer.getCreateDate())
+        .build();
   }
 
   @Override
   public CustomerUpdateResponseDTO updateCustomer(Integer customerId,
-      CustomerUpdateRequestDTO requestDTO) {
-    return null;
+      CustomerUpdateRequestDTO requestDTO) throws ServiceException {
+    Customer customer = customerRepository.findById(customerId)
+        .orElseThrow(() -> new ServiceException(CUSTOMER_NOT_FOUND));
+    if (!Objects.equals(requestDTO.getStoreId(), customer.getStoreId())) {
+      StoreByIdResponseDTO storeByIdResponseDTO = storeServiceClient.getStoreById(
+              requestDTO.getStoreId())
+          .getBody()
+          .getData();
+      customer.setStoreId(storeByIdResponseDTO.getStoreId());
+    }
+    if (!Objects.equals(requestDTO.getFirstName(), customer.getFirstName())) {
+      customer.setFirstName(requestDTO.getFirstName());
+    }
+    if (!Objects.equals(requestDTO.getLastName(), customer.getLastName())) {
+      customer.setLastName(requestDTO.getLastName());
+    }
+    if (!Objects.equals(requestDTO.getEmail(), customer.getEmail())) {
+      customer.setEmail(requestDTO.getEmail());
+    }
+    if (!Objects.equals(requestDTO.getAddressId(), customer.getAddress().getAddressId())) {
+      Address address = addressRepository.findById(requestDTO.getAddressId())
+          .orElseThrow(() -> new ServiceException(AddressService.ADDRESS_NOT_FOUND));
+      customer.setAddress(address);
+    }
+    if (!Objects.equals(requestDTO.getCustomerStatus(), customer.getActiveInt())) {
+      CustomerStatus customerStatus = CustomerStatus.fromInt(requestDTO.getCustomerStatus());
+      customer.setActiveInt(customerStatus.getValue());
+    }
+    customer.setLastUpdate(ZonedDateTime.now());
+    customerRepository.save(customer);
+    return CustomerUpdateResponseDTO.builder()
+        .customerId(customer.getCustomerId())
+        .isActive(customer.getActiveBool())
+        .customerStatus(customer.getActiveInt())
+        .lastUpdate(customer.getLastUpdate())
+        .build();
   }
 
   @Override

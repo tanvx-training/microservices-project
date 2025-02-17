@@ -13,7 +13,7 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CustomerCreateResponseDTO {
   private Integer customerId;
-  private Boolean activeBool;
-  private Integer activeInt;
+  private Boolean isActive;
+  private Integer customerStatus;
   private LocalDate createDate;
 }

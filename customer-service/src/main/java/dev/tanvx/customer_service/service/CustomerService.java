@@ -19,9 +19,11 @@ public interface CustomerService {
 
   CustomersResponseDTO getCustomerById(CustomerByIdRequestDTO requestDTO) throws ServiceException;
 
-  CustomerCreateResponseDTO createCustomer(CustomerCreateRequestDTO requestDTO);
+  CustomerCreateResponseDTO createCustomer(CustomerCreateRequestDTO requestDTO)
+      throws ServiceException;
 
-  CustomerUpdateResponseDTO updateCustomer(Integer customerId, CustomerUpdateRequestDTO requestDTO);
+  CustomerUpdateResponseDTO updateCustomer(Integer customerId, CustomerUpdateRequestDTO requestDTO)
+      throws ServiceException;
 
   CustomerDeleteResponseDTO deleteCustomer(Integer customerId) throws ServiceException;
 }
