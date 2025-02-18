@@ -12,20 +12,21 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class StaffsResponseDTO {
 
-  private Integer storeId;
-  private StaffDTO manager;
+  private Integer staffId;
+  private String firstName;
+  private String lastName;
+  private String email;
+  private Boolean isActive;
+  private StoreDTO store;
   private AddressDTO address;
 
   @Getter
   @Builder
   @ToString
   @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-  public static class StaffDTO {
-    private Integer staffId;
-    private String firstName;
-    private String lastName;
+  public static class StoreDTO {
+    private Integer storeId;
     private AddressDTO address;
-    private String email;
   }
 
   @Getter

@@ -11,4 +11,5 @@ import lombok.ToString;
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class StaffByIdRequestDTO {
+  private Integer staffId;
 }

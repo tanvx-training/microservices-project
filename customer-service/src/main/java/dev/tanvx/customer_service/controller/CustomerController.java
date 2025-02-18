@@ -82,7 +82,7 @@ public class CustomerController {
     return ResponseEntity.ok(customerUseCase.updateCustomer(customerId, responseDTO));
   }
 
-  @DeleteMapping("/{customerId}")
+  @DeleteMapping("/{customerId}/")
   public ResponseEntity<ApiResponse<CustomerDeleteResponseDTO>> deleteCustomer(
       @PathVariable("customerId") Integer customerId) {
     return ResponseEntity.ok(customerUseCase.deleteCustomer(customerId));
