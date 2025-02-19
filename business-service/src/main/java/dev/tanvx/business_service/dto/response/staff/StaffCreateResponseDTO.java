@@ -14,6 +14,6 @@ import lombok.ToString;
 public class StaffCreateResponseDTO {
 
   private Integer storeId;
-  private boolean deleteFlg;
+  private boolean active;
   private ZonedDateTime lastUpdate;
 }

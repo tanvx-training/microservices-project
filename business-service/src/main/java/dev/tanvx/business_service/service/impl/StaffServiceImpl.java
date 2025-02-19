@@ -3,6 +3,7 @@ package dev.tanvx.business_service.service.impl;
 import dev.tanvx.business_service.client.address.AddressByIdResponseDTO;
 import dev.tanvx.business_service.client.address.AddressServiceClient;
 import dev.tanvx.business_service.dto.request.staff.StaffByIdRequestDTO;
+import dev.tanvx.business_service.dto.request.staff.StaffCreateRequestDTO;
 import dev.tanvx.business_service.dto.request.staff.StaffRequestDTO;
 import dev.tanvx.business_service.dto.request.staff.StaffUpdateRequestDTO;
 import dev.tanvx.business_service.dto.response.staff.StaffByIdResponseDTO;
@@ -13,14 +14,19 @@ import dev.tanvx.business_service.dto.response.staff.StaffsResponseDTO;
 import dev.tanvx.business_service.entity.Staff;
 import dev.tanvx.business_service.entity.Store;
 import dev.tanvx.business_service.repository.StaffRepository;
+import dev.tanvx.business_service.repository.StoreRepository;
 import dev.tanvx.business_service.service.StaffService;
+import dev.tanvx.business_service.service.StoreService;
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.request.SearchRequest;
 import dev.tanvx.common_library.util.SearchSpecificationRequestUtils;
+import java.time.ZonedDateTime;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,6 +34,10 @@ import org.springframework.stereotype.Service;
 public class StaffServiceImpl implements StaffService {
 
   private final StaffRepository staffRepository;
+
+  private final StoreRepository storeRepository;
+
+  private final PasswordEncoder passwordEncoder;
 
   private final AddressServiceClient addressServiceClient;
 
@@ -158,17 +168,82 @@ public class StaffServiceImpl implements StaffService {
   }
 
   @Override
-  public StaffCreateResponseDTO createStaff(StaffCreateResponseDTO requestDTO) {
-    return null;
+  public StaffCreateResponseDTO createStaff(StaffCreateRequestDTO requestDTO)
+      throws ServiceException {
+    Store store = storeRepository.findById(requestDTO.getStoreId())
+        .orElseThrow(() -> new ServiceException(StoreService.STORE_NOT_FOUND));
+    AddressByIdResponseDTO storeAddress = addressServiceClient
+        .getAddressById(requestDTO.getAddressId())
+        .getBody()
+        .getData();
+    Staff staff = Staff.builder()
+        .firstName(requestDTO.getFirstName())
+        .lastName(requestDTO.getLastName())
+        .addressId(requestDTO.getAddressId())
+        .email(requestDTO.getEmail())
+        .store(store)
+        .active(Boolean.TRUE)
+        .username(requestDTO.getUsername())
+        .password(passwordEncoder.encode(requestDTO.getPassword()))
+        .lastUpdate(ZonedDateTime.now())
+        .build();
+    staffRepository.save(staff);
+    return StaffCreateResponseDTO.builder()
+        .storeId(store.getStoreId())
+        .active(staff.getActive())
+        .lastUpdate(staff.getLastUpdate())
+        .build();
   }
 
   @Override
-  public StaffUpdateResponseDTO updateStaff(Integer staffId, StaffUpdateRequestDTO requestDTO) {
-    return null;
+  public StaffUpdateResponseDTO updateStaff(Integer staffId, StaffUpdateRequestDTO requestDTO)
+      throws ServiceException {
+    Staff staff = staffRepository.findById(staffId)
+        .orElseThrow(() -> new ServiceException(STAFF_NOT_FOUND));
+    if (!Objects.equals(staff.getStore().getStoreId(), requestDTO.getStoreId())) {
+      Store store = storeRepository.findById(requestDTO.getStoreId())
+          .orElseThrow(() -> new ServiceException(StoreService.STORE_NOT_FOUND));
+      staff.setStore(store);
+    }
+    if (!Objects.equals(staff.getAddressId(), requestDTO.getAddressId())) {
+      AddressByIdResponseDTO address = addressServiceClient
+          .getAddressById(requestDTO.getAddressId())
+          .getBody()
+          .getData();
+      staff.setAddressId(address.getAddressId());
+    }
+    if (!Objects.equals(staff.getFirstName(), requestDTO.getFirstName())) {
+      staff.setFirstName(requestDTO.getFirstName());
+    }
+    if (!Objects.equals(staff.getLastName(), requestDTO.getLastName())) {
+      staff.setLastName(requestDTO.getLastName());
+    }
+    if (!Objects.equals(staff.getEmail(), requestDTO.getEmail())) {
+      staff.setEmail(requestDTO.getEmail());
+    }
+    if (!Objects.equals(staff.getPassword(), requestDTO.getPassword())) {
+      staff.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+    }
+    staff.setLastUpdate(ZonedDateTime.now());
+    staffRepository.save(staff);
+    return StaffUpdateResponseDTO.builder()
+        .staffId(staff.getStaffId())
+        .active(staff.getActive())
+        .lastUpdate(staff.getLastUpdate())
+        .build();
   }
 
   @Override
-  public StaffDeleteResponseDTO deleteStaff(Integer staffId) {
-    return null;
+  public StaffDeleteResponseDTO deleteStaff(Integer staffId) throws ServiceException {
+    Staff staff = staffRepository.findById(staffId)
+        .orElseThrow(() -> new ServiceException(STAFF_NOT_FOUND));
+    staff.setActive(Boolean.FALSE);
+    staff.setLastUpdate(ZonedDateTime.now());
+    staffRepository.save(staff);
+    return StaffDeleteResponseDTO.builder()
+        .staffId(staff.getStaffId())
+        .active(staff.getActive())
+        .lastUpdate(staff.getLastUpdate())
+        .build();
   }
 }

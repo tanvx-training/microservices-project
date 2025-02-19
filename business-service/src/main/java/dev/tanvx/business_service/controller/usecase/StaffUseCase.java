@@ -11,6 +11,7 @@ import dev.tanvx.business_service.dto.response.staff.StaffUpdateResponseDTO;
 import dev.tanvx.business_service.dto.response.staff.StaffsResponseDTO;
 import dev.tanvx.business_service.entity.Staff;
 import dev.tanvx.business_service.service.StaffService;
+import dev.tanvx.business_service.service.StoreService;
 import dev.tanvx.common_library.exception.BusinessException;
 import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.model.ApiResponse;
@@ -79,17 +80,69 @@ public class StaffUseCase {
 
   @Transactional
   public ApiResponse<StaffCreateResponseDTO> createStaff(StaffCreateRequestDTO requestDTO) {
-    return null;
+    try {
+      // Validate request
+      validationUtils.validateRequest(requestDTO);
+
+      StaffCreateResponseDTO staffCreateResponseDTO = staffService.createStaff(requestDTO);
+
+      return ApiResponse.<StaffCreateResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(staffCreateResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (StoreService.STORE_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.BAD_REQUEST,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 
   @Transactional
   public ApiResponse<StaffUpdateResponseDTO> updateStaff(Integer staffId,
       StaffUpdateRequestDTO requestDTO) {
-    return null;
+    try {
+      // Validate request
+      validationUtils.validateRequest(requestDTO);
+
+      StaffUpdateResponseDTO staffUpdateResponseDTO = staffService.updateStaff(staffId,
+          requestDTO);
+
+      return ApiResponse.<StaffUpdateResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(staffUpdateResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (StaffService.STAFF_NOT_FOUND.equals(e.getCauseId())
+          || StoreService.STORE_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 
   @Transactional
   public ApiResponse<StaffDeleteResponseDTO> deleteStaff(Integer staffId) {
-    return null;
+    try {
+      StaffDeleteResponseDTO staffDeleteResponseDTO = staffService.deleteStaff(staffId);
+      return ApiResponse.<StaffDeleteResponseDTO>builder()
+          .status(ResponseConstants.SUCCESS_STATUS)
+          .message(ResponseConstants.SUCCESS_MESSAGE)
+          .data(staffDeleteResponseDTO)
+          .build();
+    } catch (ServiceException e) {
+      if (StaffService.STAFF_NOT_FOUND.equals(e.getCauseId())) {
+        throw new BusinessException(HttpStatus.NOT_FOUND,
+            messageUtils.getMessage(e.getCauseId(), null));
+      }
+      throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR,
+          messageUtils.getMessage(MessageProperties.RESPONSE_500, null));
+    }
   }
 }

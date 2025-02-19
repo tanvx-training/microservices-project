@@ -13,7 +13,7 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class StaffUpdateResponseDTO {
 
-  private Integer storeId;
-  private boolean deleteFlg;
+  private Integer staffId;
+  private boolean active;
   private ZonedDateTime lastUpdate;
 }

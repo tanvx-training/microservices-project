@@ -1,6 +1,7 @@
 package dev.tanvx.business_service.service;
 
 import dev.tanvx.business_service.dto.request.staff.StaffByIdRequestDTO;
+import dev.tanvx.business_service.dto.request.staff.StaffCreateRequestDTO;
 import dev.tanvx.business_service.dto.request.staff.StaffRequestDTO;
 import dev.tanvx.business_service.dto.request.staff.StaffUpdateRequestDTO;
 import dev.tanvx.business_service.dto.response.staff.StaffByIdResponseDTO;
@@ -19,9 +20,10 @@ public interface StaffService {
 
   StaffByIdResponseDTO getStaffById(StaffByIdRequestDTO requestDTO) throws ServiceException;
 
-  StaffCreateResponseDTO createStaff(StaffCreateResponseDTO requestDTO);
+  StaffCreateResponseDTO createStaff(StaffCreateRequestDTO requestDTO) throws ServiceException;
 
-  StaffUpdateResponseDTO updateStaff(Integer staffId, StaffUpdateRequestDTO requestDTO);
+  StaffUpdateResponseDTO updateStaff(Integer staffId, StaffUpdateRequestDTO requestDTO)
+      throws ServiceException;
 
-  StaffDeleteResponseDTO deleteStaff(Integer staffId);
+  StaffDeleteResponseDTO deleteStaff(Integer staffId) throws ServiceException;
 }
