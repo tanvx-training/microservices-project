@@ -1,4 +1,4 @@
-package dev.tanvx.customer_service.client.store;
+package dev.tanvx.movies_service.client.store;
 
 import dev.tanvx.common_library.config.FeignClientConfiguration;
 import dev.tanvx.common_library.model.ApiResponse;

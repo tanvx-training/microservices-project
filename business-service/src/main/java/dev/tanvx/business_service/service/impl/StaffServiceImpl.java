@@ -1,6 +1,6 @@
 package dev.tanvx.business_service.service.impl;
 
-import dev.tanvx.business_service.client.address.AddressByIdResponseDTO;
+import dev.tanvx.common_library.model.client.AddressByIdResponseDTO;
 import dev.tanvx.business_service.client.address.AddressServiceClient;
 import dev.tanvx.business_service.dto.request.staff.StaffByIdRequestDTO;
 import dev.tanvx.business_service.dto.request.staff.StaffCreateRequestDTO;

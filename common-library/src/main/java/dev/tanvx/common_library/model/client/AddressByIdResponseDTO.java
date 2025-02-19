@@ -1,4 +1,4 @@
-package dev.tanvx.business_service.client.address;
+package dev.tanvx.common_library.model.client;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

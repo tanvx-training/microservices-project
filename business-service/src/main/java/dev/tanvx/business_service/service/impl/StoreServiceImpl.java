@@ -16,7 +16,7 @@ import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.request.SearchRequest;
 import dev.tanvx.common_library.util.SearchSpecificationRequestUtils;
-import dev.tanvx.business_service.client.address.AddressByIdResponseDTO;
+import dev.tanvx.common_library.model.client.AddressByIdResponseDTO;
 import dev.tanvx.business_service.client.address.AddressServiceClient;
 import dev.tanvx.business_service.dto.response.store.StoreDeleteResponseDTO;
 import dev.tanvx.business_service.dto.response.store.StoresResponseDTO;

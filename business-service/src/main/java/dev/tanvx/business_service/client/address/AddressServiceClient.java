@@ -1,7 +1,8 @@
 package dev.tanvx.business_service.client.address;
 
-import dev.tanvx.business_service.config.FeignClientConfiguration;
+import dev.tanvx.common_library.config.FeignClientConfiguration;
 import dev.tanvx.common_library.model.ApiResponse;
+import dev.tanvx.common_library.model.client.AddressByIdResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

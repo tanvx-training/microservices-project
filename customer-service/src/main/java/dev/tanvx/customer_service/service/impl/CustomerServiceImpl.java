@@ -6,7 +6,7 @@ import dev.tanvx.common_library.exception.ServiceException;
 import dev.tanvx.common_library.specification.SearchSpecification;
 import dev.tanvx.common_library.specification.request.SearchRequest;
 import dev.tanvx.common_library.util.SearchSpecificationRequestUtils;
-import dev.tanvx.customer_service.client.store.StoreByIdResponseDTO;
+import dev.tanvx.common_library.model.client.StoreByIdResponseDTO;
 import dev.tanvx.customer_service.client.store.StoreServiceClient;
 import dev.tanvx.customer_service.dto.request.customer.CustomerByIdRequestDTO;
 import dev.tanvx.customer_service.dto.request.customer.CustomerCreateRequestDTO;
