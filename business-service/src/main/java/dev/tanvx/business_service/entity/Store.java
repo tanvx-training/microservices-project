@@ -29,6 +29,9 @@ public class Store {
   @Column(name = "store_id")
   private Integer storeId;
 
+  @Column(name = "name", nullable = false)
+  private String name;
+
   @OneToOne
   @JoinColumn(name = "manager_staff_id", nullable = false)
   private Staff manager;

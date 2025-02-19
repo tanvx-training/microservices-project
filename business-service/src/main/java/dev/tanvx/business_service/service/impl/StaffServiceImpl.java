@@ -172,14 +172,14 @@ public class StaffServiceImpl implements StaffService {
       throws ServiceException {
     Store store = storeRepository.findById(requestDTO.getStoreId())
         .orElseThrow(() -> new ServiceException(StoreService.STORE_NOT_FOUND));
-    AddressByIdResponseDTO storeAddress = addressServiceClient
+    AddressByIdResponseDTO staffAddress = addressServiceClient
         .getAddressById(requestDTO.getAddressId())
         .getBody()
         .getData();
     Staff staff = Staff.builder()
         .firstName(requestDTO.getFirstName())
         .lastName(requestDTO.getLastName())
-        .addressId(requestDTO.getAddressId())
+        .addressId(staffAddress.getAddressId())
         .email(requestDTO.getEmail())
         .store(store)
         .active(Boolean.TRUE)

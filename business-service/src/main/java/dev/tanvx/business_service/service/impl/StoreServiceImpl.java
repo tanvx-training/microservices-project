@@ -54,6 +54,7 @@ public class StoreServiceImpl implements StoreService {
         .map(store -> {
           StoresResponseDTO.StoresResponseDTOBuilder builder = StoresResponseDTO.builder();
           builder.storeId(store.getStoreId());
+          builder.name(store.getName());
           // Build manager data
           Staff staff = store.getManager();
           if (Objects.nonNull(staff)) {
@@ -120,6 +121,7 @@ public class StoreServiceImpl implements StoreService {
         .orElseThrow(() -> new ServiceException(STORE_NOT_FOUND));
     StoreByIdResponseDTO.StoreByIdResponseDTOBuilder builder = StoreByIdResponseDTO.builder();
     builder.storeId(store.getStoreId());
+    builder.name(store.getName());
     Staff staff = store.getManager();
     if (Objects.nonNull(staff)) {
       AddressByIdResponseDTO staffAddress = addressServiceClient
@@ -191,6 +193,7 @@ public class StoreServiceImpl implements StoreService {
         .getAddressById(requestDTO.getAddressId())
         .getBody()
         .getData();
+    builder.name(requestDTO.getName());
     builder.addressId(address.getAddressId());
     builder.deleteFlg(DeleteStatus.ACTIVE.isValue());
     builder.lastUpdate(ZonedDateTime.now());
@@ -220,6 +223,9 @@ public class StoreServiceImpl implements StoreService {
           .getBody()
           .getData();
       store.setAddressId(address.getAddressId());
+    }
+    if (Objects.equals(store.getName(), requestDTO.getName())){
+      store.setName(requestDTO.getName());
     }
     store.setLastUpdate(ZonedDateTime.now());
     storeRepository.save(store);

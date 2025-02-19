@@ -12,6 +12,7 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class StoreByIdResponseDTO {
   private Integer storeId;
+  private String name;
   private StaffDTO manager;
   private AddressDTO address;
 

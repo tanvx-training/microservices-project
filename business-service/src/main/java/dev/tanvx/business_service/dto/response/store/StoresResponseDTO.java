@@ -13,6 +13,7 @@ import lombok.ToString;
 public class StoresResponseDTO {
 
   private Integer storeId;
+  private String name;
   private StaffDTO manager;
   private AddressDTO address;
 
