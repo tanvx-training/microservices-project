@@ -6,22 +6,22 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CustomerStatus {
-  INACTIVE(0),
-  ACTIVE(1),
-  PENDING(2),
-  SUSPENDED(3);
+  ACTIVE("Active", "Customer is active"),
+  INACTIVE("Inactive", "Customer is inactive"),
+  SUSPENDED("Suspended", "Customer is suspended"),
+  BANNED("Banned", "Customer is banned");
 
-  private final int value;
+  private final String code;
+  private final String description;
 
-  public static CustomerStatus fromInt(Integer value) {
-    if (value == null) {
-      return INACTIVE;
-    }
+
+  public static CustomerStatus fromCode(String code) {
     for (CustomerStatus status : CustomerStatus.values()) {
-      if (status.getValue() == value) {
+      if (status.code.equalsIgnoreCase(code)) {
         return status;
       }
     }
-    throw new IllegalArgumentException("Unknown activeInt value: " + value);
+    throw new IllegalArgumentException("Unknown status code: " + code);
   }
 }
+

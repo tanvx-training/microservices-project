@@ -96,12 +96,18 @@
   </build>
 
   <modules>
-    <module>api-gateway</module>
-    <module>business-service</module>
-    <module>movies-service</module>
-    <module>customer-service</module>
-    <module>notification-service</module>
-    <module>common-library</module>
+    <!-- Spring cloud modules -->
     <module>eureka-server</module>
+    <module>config-server</module>
+    <module>api-gateway</module>
+    <!-- Service modules -->
+    <module>product-service</module>
+    <module>customer-service</module>
+    <module>inventory-service</module>
+    <module>order-service</module>
+    <module>payment-service</module>
+    <module>notification-service</module>
+    <!-- Common modules -->
+    <module>common-library</module>
   </modules>
 </project>

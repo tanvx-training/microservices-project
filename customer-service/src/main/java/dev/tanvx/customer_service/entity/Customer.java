@@ -1,15 +1,15 @@
 package dev.tanvx.customer_service.entity;
 
+import dev.tanvx.common_library.enums.CustomerStatus;
+import dev.tanvx.common_library.model.AbstractAuditEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,16 +22,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "customer")
-public class Customer {
+@Table(name = "customers")
+public class Customer extends AbstractAuditEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "customer_id")
-  private Integer customerId;
-
-  @Column(name = "store_id", nullable = false)
-  private Integer storeId;
+  @Column(name = "id")
+  private Integer id;
 
   @Column(name = "first_name", nullable = false)
   private String firstName;
@@ -39,22 +36,25 @@ public class Customer {
   @Column(name = "last_name", nullable = false)
   private String lastName;
 
-  @Column(name = "email")
+  @Column(name = "email", nullable = false)
+  private String phone;
+
+  @Column(name = "email", nullable = false)
   private String email;
 
-  @ManyToOne
-  @JoinColumn(name = "address_id", nullable = false)
-  private Address address;
+  @Column(name = "street")
+  private String street;
 
-  @Column(name = "active_bool", nullable = false)
-  private Boolean activeBool;
+  @Column(name = "city")
+  private String city;
 
-  @Column(name = "create_date", nullable = false)
-  private LocalDate createDate;
+  @Column(name = "state")
+  private String state;
 
-  @Column(name = "last_update", nullable = false)
-  private ZonedDateTime lastUpdate;
+  @Column(name = "zip_code")
+  private String zipCode;
 
-  @Column(name = "active_int")
-  private Integer activeInt;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false)
+  private CustomerStatus status;
 }

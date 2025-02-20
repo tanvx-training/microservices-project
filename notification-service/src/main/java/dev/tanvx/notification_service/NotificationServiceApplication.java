@@ -12,6 +12,6 @@ import org.springframework.context.annotation.Import;
 public class NotificationServiceApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(NotificationServiceApplication.class, args);
+    SpringApplication.run(dev.tanvx.reporting_service.NotificationServiceApplication.class, args);
   }
 }
