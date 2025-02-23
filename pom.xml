@@ -97,17 +97,20 @@
 
   <modules>
     <!-- Spring cloud modules -->
-    <module>eureka-server</module>
-    <module>config-server</module>
-    <module>api-gateway</module>
+    <module>spring-cloud/eureka-server</module>
+    <module>spring-cloud/config-server</module>
+    <module>spring-cloud/api-gateway</module>
     <!-- Service modules -->
-    <module>product-service</module>
-    <module>customer-service</module>
-    <module>inventory-service</module>
-    <module>order-service</module>
-    <module>payment-service</module>
-    <module>notification-service</module>
+    <module>micro-services/candidate-service</module>
+    <module>micro-services/job-service</module>
+    <module>micro-services/skill-service</module>
+    <module>micro-services/speciality-service</module>
+    <module>micro-services/posting-service</module>
+    <module>micro-services/notification-service</module>
+    <module>micro-services/company-service</module>
+    <module>micro-services/benefit-service</module>
+    <module>micro-services/industry-service</module>
     <!-- Common modules -->
-    <module>common-library</module>
+    <module>spring-cloud/common-library</module>
   </modules>
 </project>

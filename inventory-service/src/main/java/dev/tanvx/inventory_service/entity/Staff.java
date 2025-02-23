@@ -1,5 +1,0 @@
-package dev.tanvx.inventory_service.entity;
-
-public class Staff {
-
-}
