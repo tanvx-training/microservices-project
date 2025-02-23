@@ -1,3 +1,3 @@
 # Getting Started
 
-![alt text](sql/img.png)
+![alt text](images/linkedIn-clone-db.png)
