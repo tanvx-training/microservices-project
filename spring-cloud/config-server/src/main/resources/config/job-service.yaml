@@ -1,11 +1,11 @@
 server:
-  port: 8083
+  port: 8085
 
 spring:
   application:
-    name: customer-service
+    name: job-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/movies-service
+    url: jdbc:postgresql://localhost:5433/job
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
@@ -19,10 +19,10 @@ spring:
     show-sql: true
     open-in-view: false
 
-#logging:
-#  structured:
-#    format:
-#      console: logstash
+logging:
+  structured:
+    format:
+      console: logstash
 
 management:
   endpoints:

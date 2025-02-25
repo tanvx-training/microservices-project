@@ -3,9 +3,9 @@ server:
 
 spring:
   application:
-    name: notification-service
+    name: industry-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/movies-service
+    url: jdbc:postgresql://localhost:5433/industry
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
@@ -19,10 +19,10 @@ spring:
     show-sql: true
     open-in-view: false
 
-#logging:
-#  structured:
-#    format:
-#      console: logstash
+logging:
+  structured:
+    format:
+      console: logstash
 
 management:
   endpoints:

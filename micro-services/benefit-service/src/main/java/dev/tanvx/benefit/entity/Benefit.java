@@ -15,6 +15,6 @@ public class Benefit extends AbstractAuditEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long benefitId;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String type;
 }
