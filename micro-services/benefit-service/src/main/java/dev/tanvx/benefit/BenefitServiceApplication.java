@@ -1,4 +1,4 @@
-package dev.tanvx.product_service;
+package dev.tanvx.benefit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

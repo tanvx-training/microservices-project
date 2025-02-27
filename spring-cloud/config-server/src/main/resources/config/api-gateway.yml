@@ -1,0 +1,236 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # Job Service Routes
+        - id: job-service
+          uri: lb://job-service
+          predicates:
+            - Path=/api/v1/jobs/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: job-service
+                fallbackUri: forward:/fallback/job-service
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+            - RemoveRequestHeader=Cookie
+            - DedupeResponseHeader=Access-Control-Allow-Origin
+
+        # Company Service Routes
+        - id: company-service
+          uri: lb://company-service
+          predicates:
+            - Path=/api/v1/companies/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: company-service
+                fallbackUri: forward:/fallback/company-service
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+
+        # Candidate Service Routes
+        - id: candidate-service
+          uri: lb://candidate-service
+          predicates:
+            - Path=/api/v1/candidates/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: candidate-service
+                fallbackUri: forward:/fallback/candidate-service
+
+        # Industry Service Routes
+        - id: industry-service
+          uri: lb://industry-service
+          predicates:
+            - Path=/api/v1/industries/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: industry-service
+                fallbackUri: forward:/fallback/industry-service
+
+        # Skill Service Routes
+        - id: skill-service
+          uri: lb://skill-service
+          predicates:
+            - Path=/api/v1/skills/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: skill-service
+                fallbackUri: forward:/fallback/skill-service
+
+        # Speciality Service Routes
+        - id: speciality-service
+          uri: lb://speciality-service
+          predicates:
+            - Path=/api/v1/specialities/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: speciality-service
+                fallbackUri: forward:/fallback/speciality-service
+
+        # Benefit Service Routes
+        - id: benefit-service
+          uri: lb://benefit-service
+          predicates:
+            - Path=/api/v1/benefits/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: benefit-service
+                fallbackUri: forward:/fallback/benefit-service
+
+        # Posting Service Routes
+        - id: posting-service
+          uri: lb://posting-service
+          predicates:
+            - Path=/api/v1/postings/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: posting-service
+                fallbackUri: forward:/fallback/posting-service
+
+        # Notification Service Routes
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/v1/notifications/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: notification-service
+                fallbackUri: forward:/fallback/notification-service
+
+# Eureka Client Configuration
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+
+# Resilience4j Configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      job-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+      company-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+      candidate-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+      industry-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+      skill-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+      speciality-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+      benefit-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+      posting-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+      notification-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+
+# JWT Configuration
+jwt:
+  secret: your-256-bit-secret
+  expiration: 86400000 # 24 hours
+
+# CORS Configuration
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "*"
+  allow-credentials: true
+  max-age: 3600
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG
+    reactor.netty: DEBUG 

@@ -5,7 +5,7 @@ spring:
   application:
     name: speciality-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/speciality
+    url: jdbc:postgresql://localhost:5432/speciality
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver

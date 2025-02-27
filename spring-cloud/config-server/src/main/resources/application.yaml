@@ -19,4 +19,53 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
   instance:
-    hostname: ${EUREKA_HOST:localhost}
+    prefer-ip-address: true
+    hostname: localhost
+    # Add instance metadata
+    metadata-map:
+      zone: default
+      environment: development
+    # Configure health check
+    health-check-url-path: /actuator/health
+    status-page-url-path: /actuator/info
+    # Configure lease settings
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+    git:
+      enabled: true
+    build:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+
+# Logging Configuration
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.cloud: INFO
+    org.hibernate: INFO

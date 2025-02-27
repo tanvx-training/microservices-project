@@ -5,7 +5,7 @@ spring:
   application:
     name: benefit-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/benefit
+    url: jdbc:postgresql://localhost:5432/benefit
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
